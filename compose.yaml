@@ -2,14 +2,12 @@ services:
   app:
     build:
       context: .
-    environment:
-      NODE_ENV: production
+      target: dev
     volumes:
       - .:/usr/src:cached
       - node_modules:/usr/src/node_modules
     ports:
       - "5173:5173"
-    command: npm run dev
 
 volumes:
   node_modules:

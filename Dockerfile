@@ -1,21 +1,43 @@
 ARG NODE_VERSION=22.12.0
-
-FROM node:${NODE_VERSION}-alpine
-
-ENV NODE_ENV production
-
+FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /usr/src
+COPY package*.json ./
 
-RUN --mount=type=bind,source=package.json,target=package.json \
-    --mount=type=bind,source=package-lock.json,target=package-lock.json \
-    --mount=type=cache,target=/root/.npm \
-    npm ci --omit=dev
+FROM base AS dev
 
-USER node
+RUN --mount=type=cache,target=/root/.npm \
+    npm install
 
 COPY . .
 
 EXPOSE 5173
 
-CMD npm run start
+CMD ["npm", "run", "dev"]
+
+FROM base AS builder
+
+ENV NODE_ENV=production
+
+RUN --mount=type=cache,target=/root/.npm \
+    npm ci --include=dev
+
+COPY . .
+
+RUN npm run build
+
+RUN npm prune --production
+
+FROM node:${NODE_VERSION}-alpine AS production
+
+WORKDIR /usr/src
+
+COPY --from=builder /usr/src /usr/src
+
+ENV NODE_ENV=production
+
+EXPOSE 5173
+
+USER node
+
+CMD ["npm", "start"]
