@@ -1,43 +1,16 @@
 import { LoaderFunction } from "@remix-run/node";
 
-import { scanAllList } from "~/lib/redis";
-import {
-  calculateFailureRate,
-  calculateSuccessRate,
-  JobStatistics,
-  JobStatus,
-} from "~/models/job-statistics";
 import IndexScreen from "~/routes/_index/components/index-screen";
 
-export const loader: LoaderFunction = async () => {
-  const messages = await scanAllList({ pattern: "statuses:*" });
+export const loader: LoaderFunction = async ({ request }) => {
+  const url = new URL("/api/dashboard", request.url);
+  const response = await fetch(url.toString(), { headers: request.headers });
 
-  const statistics: JobStatistics = Object.values(messages)
-    .flatMap((data: string[]) => data) // 各リストの要素を展開
-    .reduce<JobStatistics>(
-      (statistics, status) => {
-        if (status in statistics) {
-          return {
-            ...statistics,
-            [status]: statistics[status as JobStatus] + 1,
-          };
-        }
-        return statistics;
-      },
-      {
-        queued: 0,
-        processing: 0,
-        retrying: 0,
-        success: 0,
-        failed: 0,
-      }
-    );
+  if (!response.ok) {
+    return new Response(null, { status: response.status });
+  }
 
-  return {
-    statistics,
-    successRate: calculateSuccessRate(statistics),
-    failureRate: calculateFailureRate(statistics),
-  };
+  return await response.json();
 };
 
 export default function Index() {

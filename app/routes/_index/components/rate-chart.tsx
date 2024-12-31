@@ -12,27 +12,7 @@ import {
   ChartTooltipContent,
 } from "~/components/ui/chart";
 import { cn } from "~/lib/utils";
-
-export interface Rate {
-  timestamp: string;
-  success: number;
-  failure: number;
-  total: number;
-}
-
-const data: Rate[] = [
-  { timestamp: "2024-04-01", success: 0.46, failure: 0.54, total: 1.0 },
-  { timestamp: "2024-04-02", success: 0.25, failure: 0.75, total: 1.0 },
-  { timestamp: "2024-04-03", success: 0.17, failure: 0.83, total: 1.0 },
-  { timestamp: "2024-04-04", success: 0.71, failure: 0.29, total: 1.0 },
-  { timestamp: "2024-04-05", success: 0.66, failure: 0.34, total: 1.0 },
-  { timestamp: "2024-04-06", success: 0.02, failure: 0.98, total: 1.0 },
-  { timestamp: "2024-04-07", success: 0.85, failure: 0.15, total: 1.0 },
-  { timestamp: "2024-04-08", success: 0.83, failure: 0.17, total: 1.0 },
-  { timestamp: "2024-04-09", success: 0.91, failure: 0.09, total: 1.0 },
-  { timestamp: "2024-04-10", success: 0.26, failure: 0.74, total: 1.0 },
-  { timestamp: "2024-04-11", success: 0.19, failure: 0.81, total: 1.0 },
-];
+import { JobRate } from "~/models/job-rate";
 
 const chartConfig = {
   success: {
@@ -45,16 +25,18 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface Props extends HTMLAttributes<HTMLDivElement> {}
+interface Props extends HTMLAttributes<HTMLDivElement> {
+  rates: JobRate[];
+}
 
-export default function RateChart({ className, ...props }: Props) {
+export default function RateChart({ rates, className, ...props }: Props) {
   return (
     <ChartContainer
       config={chartConfig}
       className={cn("aspect-auto h-[350px]", className)}
       {...props}
     >
-      <AreaChart data={data}>
+      <AreaChart data={rates}>
         <defs>
           <linearGradient id="fillSuccess" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor={colors.green[500]} stopOpacity={0.8} />
