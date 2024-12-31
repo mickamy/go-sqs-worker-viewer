@@ -1,23 +1,18 @@
 import { useLoaderData } from "@remix-run/react";
 
+import Container from "~/components/container";
 import { JobStatistics } from "~/models/job-statistics";
+import StatisticsSummaryCard from "~/routes/_index/components/statistics-summary-card";
 
 interface LoaderData {
-  statistics?: JobStatistics;
+  statistics: JobStatistics;
 }
 
 export default function IndexScreen() {
   const { statistics } = useLoaderData<LoaderData>();
   return (
-    <div>
-      <h1>Job Statistics</h1>
-      <ul>
-        <li>Queued: {statistics?.queued}</li>
-        <li>Processing: {statistics?.processing}</li>
-        <li>Retrying: {statistics?.retrying}</li>
-        <li>Success: {statistics?.success}</li>
-        <li>Failed: {statistics?.failed}</li>
-      </ul>
-    </div>
+    <Container className="overflow-x-auto min-w-[750px]">
+      <StatisticsSummaryCard statistics={statistics} />
+    </Container>
   );
 }

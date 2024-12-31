@@ -5,3 +5,13 @@ export interface JobStatistics {
   readonly success: number;
   readonly failed: number;
 }
+
+export type JobStatus = keyof JobStatistics;
+
+export const JobStatuses: JobStatus[] = [
+  "queued",
+  "processing",
+  "retrying",
+  "success",
+  "failed",
+];
