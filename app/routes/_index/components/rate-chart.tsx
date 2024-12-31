@@ -76,6 +76,9 @@ export default function RateChart({ rates, className, ...props }: Props) {
                 return new Date(value).toLocaleDateString("en-US", {
                   month: "short",
                   day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                  second: "numeric",
                 });
               }}
               indicator="dot"

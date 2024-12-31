@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import Container from "~/components/container";
 import Spacer from "~/components/spacer";
+import { Slider } from "~/components/ui/slider";
 import { JobRate } from "~/models/job-rate";
 import { JobStatistics } from "~/models/job-statistics";
 import RateChart from "~/routes/_index/components/rate-chart";
@@ -15,7 +16,7 @@ interface LoaderData {
 
 const minWidthStyle = "min-w-[900px]";
 
-const pollingInterval = 5000;
+const defaultInterval = 5000;
 
 export default function IndexScreen() {
   const _data = useLoaderData<LoaderData>();
@@ -23,6 +24,8 @@ export default function IndexScreen() {
     ..._data,
     rates: [_data.rate],
   });
+
+  const [pollingInterval, setPollingInterval] = useState(defaultInterval);
 
   const poll = useCallback(async () => {
     try {
@@ -40,7 +43,7 @@ export default function IndexScreen() {
   useEffect(() => {
     const intervalId = setInterval(poll, pollingInterval);
     return () => clearInterval(intervalId);
-  }, [poll]);
+  }, [poll, pollingInterval]);
 
   return (
     <Container className="overflow-x-auto">
@@ -48,8 +51,24 @@ export default function IndexScreen() {
         statistics={data.statistics}
         className={minWidthStyle}
       />
-      <Spacer size={24} />
-      <h2 className="text-2xl font-bold">Dashboard</h2>
+      <Spacer size={42} />
+      <div className="flex flex-row justify-between">
+        <h2 className="text-2xl font-bold">Dashboard</h2>
+        <div className="space-y-2">
+          <div className="flex flex-row space-x-2">
+            <span className="text-sm">Polling interval: </span>
+            <span className="text-sm font-bold">{pollingInterval / 1000}s</span>
+          </div>
+          <Slider
+            defaultValue={[defaultInterval / 1000]}
+            min={1}
+            max={20}
+            step={1}
+            onValueChange={(val) => setPollingInterval(val[0] * 1000)}
+            className="w-40"
+          />
+        </div>
+      </div>
       <Spacer size={36} />
       <RateChart rates={data.rates} className={minWidthStyle} />
     </Container>
