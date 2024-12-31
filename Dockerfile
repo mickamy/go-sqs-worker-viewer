@@ -1,5 +1,5 @@
 ARG NODE_VERSION=22.12.0
-FROM node:${NODE_VERSION}-alpine AS base
+FROM node:${NODE_VERSION} AS base
 
 WORKDIR /usr/src
 COPY package*.json ./
