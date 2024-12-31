@@ -6,7 +6,9 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "remix vite:dev --host",
-    "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint": "eslint --fix --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint:nofix": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "format": "prettier --write ./app/**/*.{ts,tsx}",
     "start": "remix-serve ./build/server/index.js",
     "typecheck": "tsc"
   },
