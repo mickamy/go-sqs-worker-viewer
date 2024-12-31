@@ -1,17 +1,28 @@
 import { LoaderFunction } from "@remix-run/node";
 
 import { scanAllList } from "~/lib/redis";
+import {
+  calculateFailureRate,
+  calculateSuccessRate,
+  JobStatistics,
+  JobStatus,
+} from "~/models/job-statistics";
 import IndexScreen from "~/routes/_index/components/index-screen";
 
 export const loader: LoaderFunction = async () => {
   const messages = await scanAllList({ pattern: "statuses:*" });
 
-  const counts = Object.values(messages)
-    .flatMap((data) => data) // 各リストの要素を展開
-    .reduce<Record<string, number>>(
-      (counts, status) => {
-        counts[status] = (counts[status] || 0) + 1;
-        return counts;
+  const statistics: JobStatistics = Object.values(messages)
+    .flatMap((data: string[]) => data) // 各リストの要素を展開
+    .reduce<JobStatistics>(
+      (statistics, status) => {
+        if (status in statistics) {
+          return {
+            ...statistics,
+            [status]: statistics[status as JobStatus] + 1,
+          };
+        }
+        return statistics;
       },
       {
         queued: 0,
@@ -23,7 +34,9 @@ export const loader: LoaderFunction = async () => {
     );
 
   return {
-    statistics: counts,
+    statistics,
+    successRate: calculateSuccessRate(statistics),
+    failureRate: calculateFailureRate(statistics),
   };
 };
 

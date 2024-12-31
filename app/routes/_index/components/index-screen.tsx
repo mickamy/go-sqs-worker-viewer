@@ -6,6 +6,8 @@ import StatisticsSummaryCard from "~/routes/_index/components/statistics-summary
 
 interface LoaderData {
   statistics: JobStatistics;
+  successRate: number;
+  failureRate: number;
 }
 
 export default function IndexScreen() {
