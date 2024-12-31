@@ -1,10 +1,4 @@
-/**
- * This is intended to be a basic starting point for linting in your app.
- * It relies on recommended configs out of the box for simplicity, but you can
- * and should modify this configuration to best suit your team's needs.
- */
-
-/** @type {import('eslint').Linter.Config} */
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
   parserOptions: {
@@ -22,7 +16,7 @@ module.exports = {
   ignorePatterns: ["!**/.server", "!**/.client"],
 
   // Base config
-  extends: ["eslint:recommended"],
+  extends: ["eslint:recommended", "prettier"],
 
   overrides: [
     // React
@@ -48,6 +42,12 @@ module.exports = {
           typescript: {},
         },
       },
+      rules: {
+        "react/jsx-curly-brace-presence": [
+          "error",
+          { props: "never", children: "never" },
+        ],
+      },
     },
 
     // Typescript
@@ -71,6 +71,24 @@ module.exports = {
         "plugin:import/recommended",
         "plugin:import/typescript",
       ],
+      rules: {
+        "import/order": [
+          "error",
+          {
+            groups: [
+              ["builtin", "external"],
+              "internal",
+              ["parent", "sibling", "index"],
+            ],
+            "newlines-between": "always",
+            alphabetize: { order: "asc", caseInsensitive: true },
+          },
+        ],
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          { argsIgnorePattern: "^_" },
+        ],
+      },
     },
 
     // Node
@@ -78,6 +96,14 @@ module.exports = {
       files: [".eslintrc.cjs"],
       env: {
         node: true,
+      },
+    },
+
+    // shadcn/ui
+    {
+      files: ["app/components/ui/**/*.{ts,tsx}"],
+      rules: {
+        "react/prop-types": "off",
       },
     },
   ],
