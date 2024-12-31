@@ -1,13 +1,19 @@
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
+import { ReactNode } from "react";
 
+import Container from "~/components/container";
 import Header from "~/components/header";
+import StatisticsCard from "~/components/statistics-card";
+import { JobStatistics } from "~/models/job-statistics";
+import { getJobStatistics } from "~/service/job-statistics-service";
 import tailwindStyles from "~/tailwind.css?url";
 
 export const links: LinksFunction = () => [
@@ -24,7 +30,14 @@ export const links: LinksFunction = () => [
   },
 ];
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export const loader: LoaderFunction = async () => {
+  return {
+    statistics: await getJobStatistics(),
+  };
+};
+
+export function Layout({ children }: { children: ReactNode }) {
+  const { statistics } = useLoaderData<{ statistics: JobStatistics }>();
   return (
     <html lang="en">
       <head>
@@ -37,7 +50,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <div>
           <Header />
-          <main className="pt-16">{children}</main>
+          <main className="pt-16">
+            <Container className="min-w-[900px]">
+              <StatisticsCard statistics={statistics} className="my-6" />
+              {children}
+            </Container>
+          </main>
         </div>
         <ScrollRestoration />
         <Scripts />

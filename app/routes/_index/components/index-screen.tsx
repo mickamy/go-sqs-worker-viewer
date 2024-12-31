@@ -1,20 +1,14 @@
 import { useLoaderData } from "@remix-run/react";
 import { useCallback, useEffect, useState } from "react";
 
-import Container from "~/components/container";
 import Spacer from "~/components/spacer";
 import { Slider } from "~/components/ui/slider";
 import { JobRate } from "~/models/job-rate";
-import { JobStatistics } from "~/models/job-statistics";
 import RateChart from "~/routes/_index/components/rate-chart";
-import StatisticsSummaryCard from "~/routes/_index/components/statistics-summary-card";
 
 interface LoaderData {
-  statistics: JobStatistics;
   rate: JobRate;
 }
-
-const minWidthStyle = "min-w-[900px]";
 
 const defaultInterval = 5000;
 
@@ -46,12 +40,7 @@ export default function IndexScreen() {
   }, [poll, pollingInterval]);
 
   return (
-    <Container className="overflow-x-auto">
-      <StatisticsSummaryCard
-        statistics={data.statistics}
-        className={minWidthStyle}
-      />
-      <Spacer size={42} />
+    <>
       <div className="flex flex-row justify-between">
         <h2 className="text-2xl font-bold">Dashboard</h2>
         <div className="space-y-2">
@@ -70,7 +59,7 @@ export default function IndexScreen() {
         </div>
       </div>
       <Spacer size={36} />
-      <RateChart rates={data.rates} className={minWidthStyle} />
-    </Container>
+      <RateChart rates={data.rates} />
+    </>
   );
 }

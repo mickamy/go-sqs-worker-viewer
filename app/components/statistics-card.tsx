@@ -7,7 +7,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {
   statistics: JobStatistics;
 }
 
-export default function StatisticsSummaryCard({
+export default function StatisticsCard({
   statistics,
   className,
   ...props
