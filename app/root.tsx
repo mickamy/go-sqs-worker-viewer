@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import Header from "~/components/header";
 import tailwindStyles from "~/tailwind.css?url";
 
 export const links: LinksFunction = () => [
@@ -29,11 +30,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>go-sqs-worker-viewer</title>
         <Meta />
         <Links />
       </head>
       <body>
-        {children}
+        <div>
+          <Header />
+          <main className="pt-16">{children}</main>
+        </div>
         <ScrollRestoration />
         <Scripts />
       </body>
