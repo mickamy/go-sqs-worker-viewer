@@ -3,11 +3,19 @@ services:
     build:
       context: .
       target: dev
+    environment:
+      - REDIS_URL=redis://:password@redis:6379/0
     volumes:
       - .:/usr/src:cached
       - node_modules:/usr/src/node_modules
     ports:
       - "5173:5173"
+    networks:
+      - go-sqs-worker_default
 
 volumes:
   node_modules:
+
+networks:
+  go-sqs-worker_default:
+    external: true
