@@ -12,8 +12,9 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response(null, { status: 404, statusText: "Not Found" });
   }
 
-  const { jobs } = await getAllJobs({ status: status as JobStatus });
-
+  const jobs = getAllJobs({ status: status as JobStatus }).then(
+    (it) => it.jobs,
+  );
   return { jobs } as LoaderData;
 };
 

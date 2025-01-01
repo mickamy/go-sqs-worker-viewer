@@ -1,11 +1,11 @@
-import { useLoaderData } from "@remix-run/react";
+import { Await, useLoaderData } from "@remix-run/react";
+import { Suspense } from "react";
 
 import JobsTable from "~/components/jobs-table";
-import { cn } from "~/lib/utils";
 import { Job } from "~/models/job";
 
 export interface LoaderData {
-  jobs: Job[];
+  jobs: Promise<Job[]>;
 }
 
 export default function JobsScreen() {
@@ -13,7 +13,11 @@ export default function JobsScreen() {
 
   return (
     <div className="overflow-x-auto">
-      <JobsTable jobs={jobs} className={cn("mx-auto")} />
+      <Suspense fallback={<JobsTable skeleton className="mx-auto" />}>
+        <Await resolve={jobs}>
+          {(jobs) => <JobsTable jobs={jobs} className="mx-auto" />}
+        </Await>
+      </Suspense>
     </div>
   );
 }
