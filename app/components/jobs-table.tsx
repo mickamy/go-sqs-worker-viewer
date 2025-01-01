@@ -1,7 +1,6 @@
 import { HTMLAttributes, ReactNode } from "react";
 
 import {
-  Table,
   TableBody,
   TableCell,
   TableHead,
@@ -30,13 +29,13 @@ export default function JobsTable({
   }
 
   return (
-    <Table className={cn("h-full", className)} {...props}>
+    <table className={cn("", className)} {...props}>
       <TableHeader>
         <TableRow>
           {columns.map((it) => (
             <TableHead
               key={it}
-              className="py-2 px-4 text-left text-gray-500 font-bold border-b border-gray-200 whitespace-nowrap"
+              className="py-2 px-4 text-sm text-left text-gray-500 border-b border-gray-200 whitespace-nowrap"
             >
               {it}
             </TableHead>
@@ -83,7 +82,11 @@ export default function JobsTable({
 
 function renderCell(children: () => ReactNode) {
   return (
-    <TableCell className="py-2 px-4 border-b border-gray-200 text-xs overflow-hidden whitespace-nowrap text-ellipsis">
+    <TableCell
+      className={cn(
+        "py-2 px-4 border-b border-gray-200 text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+      )}
+    >
       {children()}
     </TableCell>
   );

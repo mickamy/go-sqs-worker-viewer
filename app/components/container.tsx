@@ -7,10 +7,7 @@ interface Props extends HTMLAttributes<HTMLDivElement> {}
 export default function Container({ children, className, ...props }: Props) {
   return (
     <div
-      className={cn(
-        "mx-auto h-screen flex w-full flex-col justify-start px-12 lg:px-8",
-        className
-      )}
+      className={cn("mx-auto flex w-full flex-col justify-start", className)}
       {...props}
     >
       {children}

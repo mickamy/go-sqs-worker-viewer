@@ -17,8 +17,9 @@ export default function StatisticsCard({
     <ul
       className={cn(
         "flex flex-col justify-between p-2 list-none",
-        "md:flex-row",
         "rounded-sm bg-card border border-gray-200",
+        "min-w-[200px] md:min-w-[300px] md:flex md:space-x-2",
+        "md:flex-row",
         className
       )}
       {...props}
@@ -52,8 +53,8 @@ function Item({
         "md:flex-col-reverse md:space-x-0"
       )}
     >
-      <div className="text-md md:text-sm">{status}</div>
-      <div className="text-sm md:text-xs">{statistics[status]}</div>
+      <div className="text-sm md:text-sm">{status}</div>
+      <div className="text-sm md:text-sm">{statistics[status]}</div>
     </div>
   );
 }
