@@ -13,7 +13,6 @@ import { ReactNode } from "react";
 
 import Container from "~/components/container";
 import Header from "~/components/header";
-import Spacer from "~/components/spacer";
 import StatisticsCard from "~/components/statistics-card";
 import { cn } from "~/lib/utils";
 import { JobStatistics } from "~/models/job-statistics";
@@ -66,10 +65,9 @@ export default function App() {
       <Header />
       <main className="pt-16">
         <Container>
-          <Spacer size={12} />
           <StatisticsCard
             statistics={statistics}
-            className={cn("mx-2", "md:mx-12")}
+            className={cn("mx-2 my-4", "md:mx-12")}
           />
           <Outlet />
         </Container>

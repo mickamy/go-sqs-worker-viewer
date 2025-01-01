@@ -40,7 +40,7 @@ export default function IndexScreen() {
   }, [poll, pollingInterval]);
 
   return (
-    <>
+    <div className="mx-12">
       <div className="flex flex-row justify-between">
         <h2 className="text-2xl font-bold">Dashboard</h2>
         <div className="space-y-2">
@@ -60,6 +60,6 @@ export default function IndexScreen() {
       </div>
       <Spacer size={36} />
       <RateChart rates={data.rates} />
-    </>
+    </div>
   );
 }
