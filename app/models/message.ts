@@ -10,11 +10,17 @@ export interface Message {
   readonly updated_at: string;
 }
 
-export function convertMapToMessage(message: Record<string, string>): Message {
+export function convertMapToMessage({
+  message,
+  status,
+}: {
+  message: Record<string, string>;
+  status: JobStatus;
+}): Message {
   return {
     type: message.type,
     payload: message.payload,
-    status: message.status as JobStatus,
+    status: status,
     retry_count: Number(message.retry_count),
     caller: message.caller,
     created_at: message.created_at,

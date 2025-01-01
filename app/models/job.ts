@@ -1,3 +1,4 @@
+import { JobStatus } from "~/models/job-statistics";
 import { convertMapToMessage, Message } from "~/models/message";
 
 export interface Job extends Message {
@@ -7,12 +8,14 @@ export interface Job extends Message {
 export function convertMapToJob({
   id,
   message,
+  status,
 }: {
   id: string;
   message: Record<string, string>;
+  status: JobStatus;
 }): Job {
   return {
-    ...convertMapToMessage(message),
+    ...convertMapToMessage({ message, status }),
     id,
   };
 }

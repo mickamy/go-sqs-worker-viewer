@@ -1,4 +1,3 @@
-import * as React from "react";
 import { HTMLAttributes } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import colors from "tailwindcss/colors";

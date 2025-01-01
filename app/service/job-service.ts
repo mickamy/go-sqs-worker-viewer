@@ -2,19 +2,48 @@ import redis, { scan } from "~/lib/redis";
 import { convertMapToJob, Job } from "~/models/job";
 import { JobStatus } from "~/models/job-statistics";
 
-export async function getJobs({
-  index,
-  count,
+export async function getAllJobs({
   status,
+  chunkSize = 1000,
 }: {
-  index: number;
-  count: number;
   status: JobStatus;
-}): Promise<{ jobs: Job[]; total: number }> {
-  const { response: idToStatus } = await scan({
+  chunkSize?: number;
+}): Promise<{ jobs: Job[] }> {
+  const jobs: Job[] = [];
+  let cursor = 0;
+
+  try {
+    do {
+      const { jobs: pageJobs, nextCursor } = await getJobs({
+        cursor,
+        chunkSize,
+        status,
+      });
+      cursor = nextCursor;
+
+      jobs.push(...pageJobs);
+    } while (cursor != 0);
+  } catch (err) {
+    console.error("error during SCAN:", err);
+    throw err;
+  }
+
+  return { jobs };
+}
+
+export async function getJobs({
+  status,
+  cursor,
+  chunkSize,
+}: {
+  status: JobStatus;
+  cursor: number;
+  chunkSize: number;
+}): Promise<{ jobs: Job[]; nextCursor: number }> {
+  const { response: idToStatus, nextCursor } = await scan({
     pattern: `statuses:*:${status}`,
-    cursor: index,
-    chunkSize: count,
+    cursor,
+    chunkSize: chunkSize,
   });
 
   const ids = Object.keys(idToStatus).map((key) => key.split(":")[1]);
@@ -24,7 +53,7 @@ export async function getJobs({
   const responses = await pipeline.exec();
 
   if (!responses) {
-    return { jobs: [], total: 0 };
+    return { jobs: [], nextCursor };
   }
 
   const jobs = ids.reduce((acc, key, index) => {
@@ -35,12 +64,15 @@ export async function getJobs({
     }
     if (value && Object.keys(value).length > 0) {
       acc.push(
-        convertMapToJob({ id: key, message: value as Record<string, string> })
+        convertMapToJob({
+          id: key,
+          message: value as Record<string, string>,
+          status,
+        })
       );
     }
     return acc;
   }, [] as Job[]);
 
-  const total = await redis.llen(`statuses:*:${status}`);
-  return { jobs, total };
+  return { jobs, nextCursor };
 }

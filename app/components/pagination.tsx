@@ -14,9 +14,15 @@ import { convertPageToQuery, getPages, Page } from "~/models/page";
 
 export interface Props extends HTMLAttributes<HTMLDivElement> {
   next: Page;
+  defaultQuery?: string;
 }
 
-export default function Pagination({ next, className, ...props }: Props) {
+export default function Pagination({
+  next,
+  defaultQuery,
+  className,
+  ...props
+}: Props) {
   const pages = getPages({ next });
   return (
     <div className={cn("", className)} {...props}>
@@ -25,14 +31,14 @@ export default function Pagination({ next, className, ...props }: Props) {
           <PaginationItem>
             {pages.previous && (
               <PaginationPrevious
-                href={`?${convertPageToQuery(pages.previous)}`}
+                href={query({ page: pages.previous, defaultQuery })}
               />
             )}
           </PaginationItem>
           {pages.content.map((p) => (
             <PaginationItem key={p.index}>
               <PaginationLink
-                href={`?${convertPageToQuery(p)}`}
+                href={query({ page: p, defaultQuery })}
                 isActive={next.index - 1 == p.index}
               >
                 {p.index + 1}
@@ -45,7 +51,9 @@ export default function Pagination({ next, className, ...props }: Props) {
                 <PaginationEllipsis />
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext href={`?${convertPageToQuery(pages.next)}`} />
+                <PaginationNext
+                  href={query({ page: pages.next, defaultQuery })}
+                />
               </PaginationItem>
             </>
           )}
@@ -53,4 +61,11 @@ export default function Pagination({ next, className, ...props }: Props) {
       </Comp>
     </div>
   );
+}
+
+function query({ page, defaultQuery }: { page: Page; defaultQuery?: string }) {
+  if (defaultQuery) {
+    return `?${defaultQuery}&${convertPageToQuery(page)}`;
+  }
+  return `?${convertPageToQuery(page)}`;
 }
