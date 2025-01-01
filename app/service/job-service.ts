@@ -1,17 +1,20 @@
-import redis, { scanList } from "~/lib/redis";
+import redis, { scan } from "~/lib/redis";
 import { convertMapToJob, Job } from "~/models/job";
 import { JobStatus } from "~/models/job-statistics";
 
 export async function getJobs({
   index,
+  count,
   status,
 }: {
   index: number;
+  count: number;
   status: JobStatus;
-}): Promise<Job[]> {
-  const { response: idToStatus } = await scanList({
+}): Promise<{ jobs: Job[]; total: number }> {
+  const { response: idToStatus } = await scan({
     pattern: `statuses:*:${status}`,
     cursor: index,
+    chunkSize: count,
   });
 
   const ids = Object.keys(idToStatus).map((key) => key.split(":")[1]);
@@ -21,10 +24,10 @@ export async function getJobs({
   const responses = await pipeline.exec();
 
   if (!responses) {
-    return [];
+    return { jobs: [], total: 0 };
   }
 
-  return ids.reduce((acc, key, index) => {
+  const jobs = ids.reduce((acc, key, index) => {
     const [err, value] = responses[index];
     if (err) {
       console.error("error during HGETALL:", err);
@@ -37,4 +40,7 @@ export async function getJobs({
     }
     return acc;
   }, [] as Job[]);
+
+  const total = await redis.llen(`statuses:*:${status}`);
+  return { jobs, total };
 }

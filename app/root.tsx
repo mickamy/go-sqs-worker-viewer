@@ -1,11 +1,13 @@
 import type { LinksFunction, LoaderFunction } from "@remix-run/node";
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from "@remix-run/react";
 import { ReactNode } from "react";
 
@@ -37,7 +39,6 @@ export const loader: LoaderFunction = async () => {
 };
 
 export function Layout({ children }: { children: ReactNode }) {
-  const { statistics } = useLoaderData<{ statistics: JobStatistics }>();
   return (
     <html lang="en">
       <head>
@@ -48,15 +49,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <Links />
       </head>
       <body>
-        <div>
-          <Header />
-          <main className="pt-16">
-            <Container className="min-w-[900px]">
-              <StatisticsCard statistics={statistics} className="my-6" />
-              {children}
-            </Container>
-          </main>
-        </div>
+        {children}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -65,5 +58,31 @@ export function Layout({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const { statistics } = useLoaderData<{ statistics: JobStatistics }>();
+  return (
+    <div>
+      <Header />
+      <main className="pt-16">
+        <Container className="min-w-[900px]">
+          <StatisticsCard statistics={statistics} className="my-6" />
+          <Outlet />
+        </Container>
+      </main>
+    </div>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+  return (
+    <div className="flex items-center justify-center w-full min-h-screen">
+      <h1 className="text-xl">
+        {isRouteErrorResponse(error)
+          ? `${error.status} ${error.statusText}`
+          : error instanceof Error
+          ? error.message
+          : "Unknown Error"}
+      </h1>
+    </div>
+  );
 }

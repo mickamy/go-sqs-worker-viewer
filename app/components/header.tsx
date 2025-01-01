@@ -16,11 +16,11 @@ export default function Header({ className, ...props }: Props) {
     >
       <nav className="flex gap-4">
         <Link to="/">Dashboard</Link>
-        <Link to="/queued">Queued</Link>
-        <Link to="/processing">Processing</Link>
-        <Link to="/retrying">Retrying</Link>
-        <Link to="/success">Success</Link>
-        <Link to="/failed">Failed</Link>
+        <Link to="/jobs?status=queued">Queued</Link>
+        <Link to="/jobs?status=processing">Processing</Link>
+        <Link to="/jobs?status=retrying">Retrying</Link>
+        <Link to="/jobs?status=success">Success</Link>
+        <Link to="/jobs?status=failed">Failed</Link>
       </nav>
     </header>
   );

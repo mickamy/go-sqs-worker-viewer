@@ -25,19 +25,19 @@ const redis = await init();
 
 export default redis;
 
-export async function scanAllList({
+export async function scanAll({
   pattern,
   chunkSize = 1000,
 }: {
   pattern: string;
   chunkSize?: number;
-}): Promise<Record<string, string[]>> {
-  const response: Record<string, string[]> = {};
+}): Promise<Record<string, string>> {
+  const response: Record<string, string> = {};
   let cursor = 0;
 
   try {
     do {
-      const { response: pageResponse, nextCursor } = await scanList({
+      const { response: pageResponse, nextCursor } = await scan({
         cursor,
         pattern,
         chunkSize,
@@ -54,7 +54,7 @@ export async function scanAllList({
   return response;
 }
 
-export async function scanList({
+export async function scan({
   pattern,
   cursor = 0,
   chunkSize = 1000,
@@ -63,10 +63,10 @@ export async function scanList({
   cursor?: number;
   chunkSize?: number;
 }): Promise<{
-  response: Record<string, string[]>;
+  response: Record<string, string>;
   nextCursor: number;
 }> {
-  const response: Record<string, string[]> = {};
+  const response: Record<string, string> = {};
 
   try {
     const [newCursor, keys] = await redis.scan(
@@ -78,7 +78,7 @@ export async function scanList({
     );
 
     for (const key of keys) {
-      response[key] = await redis.lrange(key, 0, -1);
+      response[key] = (await redis.get(key))!;
     }
 
     return { response: response, nextCursor: parseInt(newCursor, 10) };
