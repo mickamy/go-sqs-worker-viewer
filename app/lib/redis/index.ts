@@ -14,6 +14,10 @@ async function init() {
     throw err;
   }
 
+  process.on("SIGINT", async () => {
+    await client.quit();
+  });
+
   return client;
 }
 
@@ -28,28 +32,58 @@ export async function scanAllList({
   pattern: string;
   chunkSize?: number;
 }): Promise<Record<string, string[]>> {
-  const results: Record<string, string[]> = {};
-  let cursor = "0";
+  const response: Record<string, string[]> = {};
+  let cursor = 0;
 
   try {
     do {
-      const [newCursor, keys] = await redis.scan(
+      const { response: pageResponse, nextCursor } = await scanList({
         cursor,
-        "MATCH",
         pattern,
-        "COUNT",
-        chunkSize
-      );
-      cursor = newCursor;
+        chunkSize,
+      });
+      cursor = nextCursor;
 
-      for (const key of keys) {
-        results[key] = await redis.lrange(key, 0, -1);
-      }
-    } while (cursor !== "0");
+      Object.assign(response, pageResponse);
+    } while (cursor != 0);
   } catch (err) {
     console.error("error during SCAN:", err);
     throw err;
   }
 
-  return results;
+  return response;
+}
+
+export async function scanList({
+  pattern,
+  cursor = 0,
+  chunkSize = 1000,
+}: {
+  pattern: string;
+  cursor?: number;
+  chunkSize?: number;
+}): Promise<{
+  response: Record<string, string[]>;
+  nextCursor: number;
+}> {
+  const response: Record<string, string[]> = {};
+
+  try {
+    const [newCursor, keys] = await redis.scan(
+      cursor,
+      "MATCH",
+      pattern,
+      "COUNT",
+      chunkSize
+    );
+
+    for (const key of keys) {
+      response[key] = await redis.lrange(key, 0, -1);
+    }
+
+    return { response: response, nextCursor: parseInt(newCursor, 10) };
+  } catch (err) {
+    console.error("error during SCAN:", err);
+    throw err;
+  }
 }
