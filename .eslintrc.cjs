@@ -17,17 +17,19 @@ module.exports = {
 
   // Base config
   extends: ["eslint:recommended", "prettier"],
+  plugins: ["prettier"],
 
   overrides: [
     // React
     {
       files: ["**/*.{js,jsx,ts,tsx}"],
-      plugins: ["react", "jsx-a11y"],
+      plugins: ["react", "jsx-a11y", "prettier"],
       extends: [
         "plugin:react/recommended",
         "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
         "plugin:jsx-a11y/recommended",
+        "prettier",
       ],
       settings: {
         react: {
@@ -47,13 +49,14 @@ module.exports = {
           "error",
           { props: "never", children: "never" },
         ],
+        "prettier/prettier": "error",
       },
     },
 
     // Typescript
     {
       files: ["**/*.{ts,tsx}"],
-      plugins: ["@typescript-eslint", "import"],
+      plugins: ["@typescript-eslint", "import", "prettier"],
       parser: "@typescript-eslint/parser",
       settings: {
         "import/internal-regex": "^~/",
@@ -70,6 +73,7 @@ module.exports = {
         "plugin:@typescript-eslint/recommended",
         "plugin:import/recommended",
         "plugin:import/typescript",
+        "prettier",
       ],
       rules: {
         "import/order": [
@@ -88,6 +92,7 @@ module.exports = {
           "error",
           { argsIgnorePattern: "^_" },
         ],
+        "prettier/prettier": "error",
       },
     },
 
