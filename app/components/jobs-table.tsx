@@ -12,12 +12,25 @@ import { cn } from "~/lib/utils";
 import { Job } from "~/models/job";
 
 interface Props extends HTMLAttributes<HTMLTableElement> {
-  jobs: Job[];
+  jobs?: Job[];
+  skeleton?: boolean;
 }
 
-export default function JobsTable({ jobs, className, ...props }: Props) {
+export default function JobsTable({
+  jobs,
+  skeleton = false,
+  className,
+  ...props
+}: Props) {
+  if (!skeleton && !jobs) {
+    throw new Error("jobs is required");
+  }
+  if (skeleton && jobs) {
+    throw new Error("jobs should be undefined when skeleton is true");
+  }
+
   return (
-    <Table className={cn("", className)} {...props}>
+    <Table className={cn("h-full", className)} {...props}>
       <TableHeader>
         <TableRow>
           {columns.map((it) => (
@@ -31,38 +44,49 @@ export default function JobsTable({ jobs, className, ...props }: Props) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {jobs.map((job) => (
-          <TableRow key={job.id}>
-            {renderCell(() => job.id)}
-            {renderCell(() => job.type)}
-            {renderCell(() => job.payload)}
-            {renderCell(() => job.status)}
-            {renderCell(() => job.retry_count)}
-            {renderCell(() => job.caller)}
-            {renderCell(() => job.created_at)}
-            {renderCell(() => job.updated_at)}
+        {skeleton ? (
+          Array.from({ length: 20 }).map((_, index) => (
+            <TableRow key={index}>
+              {columns.map((_, cellIndex) => (
+                <TableCell
+                  key={cellIndex}
+                  className="py-2 px-4 border-b border-gray-200 animate-pulse"
+                >
+                  <div className="h-4 bg-gray-300 rounded-md"></div>
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        ) : jobs?.length === 0 ? (
+          <TableRow>
+            <TableCell
+              colSpan={columns.length}
+              className="py-4 text-center text-gray-500 border-b border-gray-200"
+            >
+              No jobs available.
+            </TableCell>
           </TableRow>
-        ))}
+        ) : (
+          jobs?.map((job) => (
+            <TableRow key={job.id}>
+              {renderCell(() => job.id)}
+              {renderCell(() => job.type)}
+              {renderCell(() => job.caller)}
+              {renderCell(() => job.created_at)}
+            </TableRow>
+          ))
+        )}
       </TableBody>
-    </Table>
+    </table>
   );
 }
 
 function renderCell(children: () => ReactNode) {
   return (
-    <TableCell className="py-2 px-4 font-medium border-b border-gray-200 whitespace-nowrap">
+    <TableCell className="py-2 px-4 border-b border-gray-200 text-xs overflow-hidden whitespace-nowrap text-ellipsis">
       {children()}
     </TableCell>
   );
 }
 
-const columns = [
-  "ID",
-  "Type",
-  "Payload",
-  "Status",
-  "Retry Count",
-  "Caller",
-  "Created At",
-  "Updated At",
-];
+const columns = ["ID", "Type", "Caller", "Created At"];
