@@ -14,6 +14,7 @@ import { ReactNode } from "react";
 import Container from "~/components/container";
 import Header from "~/components/header";
 import StatisticsCard from "~/components/statistics-card";
+import { cn } from "~/lib/utils";
 import { JobStatistics } from "~/models/job-statistics";
 import { getJobStatistics } from "~/service/job-statistics-service";
 import tailwindStyles from "~/tailwind.css?url";
@@ -63,8 +64,11 @@ export default function App() {
     <div>
       <Header />
       <main className="pt-16">
-        <Container className="min-w-[900px]">
-          <StatisticsCard statistics={statistics} className="my-6" />
+        <Container>
+          <StatisticsCard
+            statistics={statistics}
+            className={cn("my-6", "md:mx-12")}
+          />
           <Outlet />
         </Container>
       </main>
