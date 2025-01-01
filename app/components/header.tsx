@@ -1,11 +1,18 @@
 import { Link } from "@remix-run/react";
-import { HTMLAttributes } from "react";
+import { Menu } from "lucide-react";
+import { HTMLAttributes, useCallback, useState } from "react";
 
 import { cn } from "~/lib/utils";
 
 interface Props extends HTMLAttributes<HTMLElement> {}
 
 export default function Header({ className, ...props }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeMenu = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   return (
     <header
       className={cn(
@@ -14,13 +21,60 @@ export default function Header({ className, ...props }: Props) {
       )}
       {...props}
     >
-      <nav className="flex gap-4">
-        <Link to="/">Dashboard</Link>
-        <Link to="/jobs?status=queued">Queued</Link>
-        <Link to="/jobs?status=processing">Processing</Link>
-        <Link to="/jobs?status=retrying">Retrying</Link>
-        <Link to="/jobs?status=success">Success</Link>
-        <Link to="/jobs?status=failed">Failed</Link>
+      <div className="flex justify-between items-center">
+        <button
+          className="block md:hidden"
+          onClick={() => setIsOpen((prev) => !prev)}
+        >
+          <Menu color="black" className="h-6 w-6 " />
+        </button>
+      </div>
+
+      <nav
+        className={cn(
+          "flex-col gap-4 mt-4 md:flex-row md:gap-4 md:mt-0",
+          isOpen ? "flex" : "hidden",
+          "md:block md:space-x-2",
+        )}
+      >
+        <Link to="/" className="hover:underline">
+          Dashboard
+        </Link>
+        <Link
+          to="/jobs?status=queued"
+          onClick={closeMenu}
+          className="hover:underline"
+        >
+          Queued
+        </Link>
+        <Link
+          to="/jobs?status=processing"
+          onClick={closeMenu}
+          className="hover:underline"
+        >
+          Processing
+        </Link>
+        <Link
+          to="/jobs?status=retrying"
+          onClick={closeMenu}
+          className="hover:underline"
+        >
+          Retrying
+        </Link>
+        <Link
+          to="/jobs?status=success"
+          onClick={closeMenu}
+          className="hover:underline"
+        >
+          Success
+        </Link>
+        <Link
+          to="/jobs?status=failed"
+          onClick={closeMenu}
+          className="hover:underline"
+        >
+          Failed
+        </Link>
       </nav>
     </header>
   );
