@@ -17,6 +17,6 @@ export async function getJobStatistics(): Promise<JobStatistics> {
       retrying: 0,
       success: 0,
       failed: 0,
-    }
+    },
   );
 }

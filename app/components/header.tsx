@@ -10,7 +10,7 @@ export default function Header({ className, ...props }: Props) {
     <header
       className={cn(
         "bg-white shadow-md py-4 px-6 z-10 fixed top-0 left-0 w-full",
-        className
+        className,
       )}
       {...props}
     >

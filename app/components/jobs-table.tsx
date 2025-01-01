@@ -84,7 +84,7 @@ function renderCell(children: () => ReactNode) {
   return (
     <TableCell
       className={cn(
-        "py-2 px-4 border-b border-gray-200 text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+        "py-2 px-4 border-b border-gray-200 text-sm overflow-hidden whitespace-nowrap text-ellipsis",
       )}
     >
       {children()}

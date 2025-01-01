@@ -74,7 +74,7 @@ export async function scan({
       "MATCH",
       pattern,
       "COUNT",
-      chunkSize
+      chunkSize,
     );
 
     for (const key of keys) {

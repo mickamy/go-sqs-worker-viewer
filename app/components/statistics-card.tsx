@@ -20,7 +20,7 @@ export default function StatisticsCard({
         "rounded-sm bg-card border border-gray-200",
         "min-w-[200px] md:min-w-[300px] md:flex md:space-x-2",
         "md:flex-row",
-        className
+        className,
       )}
       {...props}
     >
@@ -50,7 +50,7 @@ function Item({
     <div
       className={cn(
         "flex flex-row items-center justify-between",
-        "md:flex-col-reverse md:space-x-0"
+        "md:flex-col-reverse md:space-x-0",
       )}
     >
       <div className="text-sm md:text-sm">{status}</div>

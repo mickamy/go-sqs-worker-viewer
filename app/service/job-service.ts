@@ -68,7 +68,7 @@ export async function getJobs({
           id: key,
           message: value as Record<string, string>,
           status,
-        })
+        }),
       );
     }
     return acc;
