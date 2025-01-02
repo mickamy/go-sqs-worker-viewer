@@ -1,8 +1,7 @@
 import { LoaderFunction } from "@remix-run/node";
 
-import { JobStatus, JobStatuses } from "~/models/job-statistics";
-import JobsScreen, { LoaderData } from "~/routes/jobs/components/jobs-screen";
-import { getAllJobs } from "~/service/job-service";
+import { JobStatuses } from "~/models/job-statistics";
+import JobsScreen from "~/routes/jobs/components/jobs-screen";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -12,10 +11,18 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response(null, { status: 404, statusText: "Not Found" });
   }
 
-  const jobs = getAllJobs({ status: status as JobStatus }).then(
-    (it) => it.jobs,
+  const response = await fetch(
+    new URL(`/api/jobs?status=${status}`, request.url).toString(),
+    {
+      headers: request.headers,
+    },
   );
-  return { jobs } as LoaderData;
+
+  if (!response.ok) {
+    throw new Response(null, { status: response.status });
+  }
+
+  return await response.json();
 };
 
 export default function Queued() {

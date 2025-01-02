@@ -30,7 +30,10 @@ export default function JobsTable({
 
   return (
     <table
-      className={cn(skeleton && "min-w-[400px] md:min-w-[800px]", className)}
+      className={cn(
+        (skeleton || jobs?.length == 0) && "min-w-[400px] md:min-w-[800px]",
+        className,
+      )}
       {...props}
     >
       <TableHeader>

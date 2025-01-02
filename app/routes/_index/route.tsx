@@ -7,7 +7,7 @@ export const loader: LoaderFunction = async ({ request }) => {
   const response = await fetch(url.toString(), { headers: request.headers });
 
   if (!response.ok) {
-    return new Response(null, { status: response.status });
+    throw new Response(null, { status: response.status });
   }
 
   return await response.json();
