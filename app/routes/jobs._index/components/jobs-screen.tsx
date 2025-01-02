@@ -71,7 +71,7 @@ export default function JobsScreen() {
         {hasMore && (
           <div
             ref={loaderRef}
-            className="relative flex justify-center items-center"
+            className="relative flex justify-center items-center mt-4"
           >
             <LoaderCircle className="h-8 w-8 animate-spin text-gray-500" />
           </div>

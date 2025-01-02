@@ -4,7 +4,7 @@ import { Job } from "~/models/job";
 import { JobStatus, JobStatuses } from "~/models/job-statistics";
 import { getJobs } from "~/service/job-service";
 
-const chunkSize = 50;
+const chunkSize = 100;
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
