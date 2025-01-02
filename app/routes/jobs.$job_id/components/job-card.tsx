@@ -25,7 +25,7 @@ export default function JobCard({ job }: Props) {
     <Card className="w-full max-w-3xl mx-auto mt-8">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
-          Message Details
+          Job Details
           <span className="ml-2 text-lg font-normal text-gray-500">
             ID: {job.id}
           </span>

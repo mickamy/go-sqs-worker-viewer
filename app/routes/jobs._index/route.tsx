@@ -1,8 +1,8 @@
 import { LoaderFunction } from "@remix-run/node";
+import { useSearchParams } from "@remix-run/react";
 
 import { JobStatuses } from "~/models/job-statistics";
 import JobsScreen from "~/routes/jobs._index/components/jobs-screen";
-import { useSearchParams } from "@remix-run/react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
