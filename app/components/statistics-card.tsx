@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import { HTMLAttributes } from "react";
 
 import Spacer from "~/components/spacer";
@@ -53,7 +54,12 @@ function Item({
         "md:flex-col-reverse md:space-x-0",
       )}
     >
-      <div className="text-sm md:text-sm">{status}</div>
+      <Link
+        to={`/jobs?status=${status}`}
+        className="hover:underline hover:underline-offset-4 hover:text-primary"
+      >
+        <div className="text-sm md:text-sm">{status}</div>
+      </Link>
       <div className="text-sm md:text-sm">{statistics[status]}</div>
     </div>
   );
