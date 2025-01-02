@@ -43,15 +43,18 @@ export default function JobsScreen() {
     (node: HTMLDivElement | null) => {
       if (observer.current) observer.current.disconnect();
 
-      observer.current = new IntersectionObserver(async (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          await fetchJobs();
-        }
-      });
+      observer.current = new IntersectionObserver(
+        async (entries) => {
+          if (entries[0].isIntersecting && hasMore) {
+            await fetchJobs();
+          }
+        },
+        { rootMargin: "200px" },
+      );
 
       if (node) observer.current.observe(node);
     },
-    [observer, hasMore, fetchJobs],
+    [fetchJobs, hasMore],
   );
 
   const navigate = useNavigate();
@@ -69,7 +72,7 @@ export default function JobsScreen() {
         {hasMore && (
           <div
             ref={loaderRef}
-            className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            className="relative flex justify-center items-center"
           >
             <LoaderCircle className="h-8 w-8 animate-spin text-gray-500" />
           </div>
