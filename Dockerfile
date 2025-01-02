@@ -36,7 +36,7 @@ COPY --from=builder /usr/src /usr/src
 
 ENV NODE_ENV=production
 
-EXPOSE 5173
+EXPOSE 3000
 
 USER node
 
