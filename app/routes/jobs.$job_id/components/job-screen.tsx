@@ -1,9 +1,13 @@
-import { Job } from "~/models/job";
+import { useLoaderData } from "@remix-run/react";
 
-interface LoaderData {
-  job: Job[];
+import { Job } from "~/models/job";
+import JobCard from "~/routes/jobs.$job_id/components/job-card";
+
+export interface LoaderData {
+  job: Job;
 }
 
 export default function JobScreen() {
-  return <div>Jobs#show</div>;
+  const { job } = useLoaderData<LoaderData>();
+  return <JobCard job={job} />;
 }

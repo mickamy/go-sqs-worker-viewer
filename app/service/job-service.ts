@@ -1,35 +1,6 @@
-import redis, { scan } from "~/lib/redis";
+import { redis, scan } from "~/lib/redis";
 import { convertMapToJob, Job } from "~/models/job";
 import { JobStatus } from "~/models/job-statistics";
-
-export async function getAllJobs({
-  status,
-  chunkSize = 1000,
-}: {
-  status: JobStatus;
-  chunkSize?: number;
-}): Promise<{ jobs: Job[] }> {
-  const jobs: Job[] = [];
-  let cursor = 0;
-
-  try {
-    do {
-      const { jobs: pageJobs, nextCursor } = await getJobs({
-        cursor,
-        chunkSize,
-        status,
-      });
-      cursor = nextCursor;
-
-      jobs.push(...pageJobs);
-    } while (cursor != 0);
-  } catch (err) {
-    console.error("error during SCAN:", err);
-    throw err;
-  }
-
-  return { jobs };
-}
 
 export async function getJobs({
   status,
@@ -67,7 +38,6 @@ export async function getJobs({
         convertMapToJob({
           id: key,
           message: value as Record<string, string>,
-          status,
         }),
       );
     }
@@ -75,4 +45,9 @@ export async function getJobs({
   }, [] as Job[]);
 
   return { jobs, nextCursor };
+}
+
+export async function getJob({ id }: { id: string }): Promise<Job> {
+  const message = await redis.hgetall(`messages:${id}`);
+  return convertMapToJob({ id, message });
 }

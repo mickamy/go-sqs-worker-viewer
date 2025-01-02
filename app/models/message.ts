@@ -12,15 +12,13 @@ export interface Message {
 
 export function convertMapToMessage({
   message,
-  status,
 }: {
   message: Record<string, string>;
-  status: JobStatus;
 }): Message {
   return {
     type: message.type,
     payload: message.payload,
-    status: status,
+    status: message.status as JobStatus,
     retry_count: Number(message.retry_count),
     caller: message.caller,
     created_at: message.created_at,

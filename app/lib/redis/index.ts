@@ -23,7 +23,7 @@ async function init() {
 
 const redis = await init();
 
-export default redis;
+export { redis };
 
 export async function scanAll({
   pattern,
