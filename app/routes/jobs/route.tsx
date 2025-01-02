@@ -2,6 +2,7 @@ import { LoaderFunction } from "@remix-run/node";
 
 import { JobStatuses } from "~/models/job-statistics";
 import JobsScreen from "~/routes/jobs/components/jobs-screen";
+import { useSearchParams } from "@remix-run/react";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -25,6 +26,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   return await response.json();
 };
 
-export default function Queued() {
-  return <JobsScreen />;
+export default function Jobs() {
+  const [searchParams] = useSearchParams();
+  const key = searchParams.toString();
+  return <JobsScreen key={key} />;
 }
