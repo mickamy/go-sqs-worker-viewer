@@ -1,42 +1,27 @@
-# Welcome to Remix!
+# go-sqs-worker-viewer
 
-- 📖 [Remix docs](https://remix.run/docs)
+go-sqs-worker-viewer is a web application designed to monitor and manage asynchronous jobs handled by [go-sqs-worker](https://github.com/mickamy/go-sqs-worker).
 
-## Development
+This application features a dashboard to display job success and failure rates, along with a categorized list of jobs by their status (e.g., queued, processing, success, failed). It provides an intuitive interface for tracking and analyzing job processing.
 
-Run the dev server:
+## How to Use
 
-```shellscript
-npm run dev
+Integrating go-sqs-worker-viewer into your application that uses go-sqs-worker is straightforward. Below is an example configuration using docker compose:
+
+```yaml
+  viewer:
+    image: mickamy/go-sqs-worker-viewer
+    environment:
+      - REDIS_URL=redis://:password@redis:6379/0
+    ports:
+      - "3000:3000"
+    networks:
+      - default
 ```
 
-## Deployment
+After setting up, the application will be accessible at http://localhost:3000, providing real-time insights into job processing and status updates.
 
-First, build your app for production:
+## License
 
-```sh
-npm run build
-```
+This project is licensed under the MIT License.
 
-Then run the app in production mode:
-
-```sh
-npm start
-```
-
-Now you'll need to pick a host to deploy it to.
-
-### DIY
-
-If you're familiar with deploying Node applications, the built-in Remix app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-- `build/server`
-- `build/client`
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting
-experience. You can use whatever css framework you prefer. See
-the [Vite docs on css](https://vitejs.dev/guide/features.html#css) for more information.
