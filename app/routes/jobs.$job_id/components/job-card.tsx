@@ -41,7 +41,7 @@ export default function JobCard({ job }: Props) {
             <dt className="text-sm font-medium text-gray-500">Status</dt>
             <dd className="mt-1 text-sm text-gray-900">
               <Badge
-                variant={job.status === "success" ? "default" : "secondary"}
+                variant={job.status === "failed" ? "destructive" : "secondary"}
               >
                 {formatStatus(job.status)}
               </Badge>

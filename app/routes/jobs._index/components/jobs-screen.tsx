@@ -2,8 +2,8 @@ import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import { LoaderCircle } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
-import JobsTable from "~/components/jobs-table";
 import { Job } from "~/models/job";
+import JobsTable from "~/routes/jobs._index/components/jobs-table";
 
 interface LoaderData {
   jobs: Job[];

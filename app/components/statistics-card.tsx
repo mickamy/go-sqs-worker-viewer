@@ -38,7 +38,7 @@ export default function StatisticsCard({
   );
 
   return (
-    <Card className={cn("w-full", className)} {...props}>
+    <Card className={cn("w-full min-w-[400px]", className)} {...props}>
       <CardContent className="p-4">
         <div className="flex flex-wrap justify-between gap-2">
           {JobStatuses.map((status) => (
@@ -90,7 +90,7 @@ function Item({
 }
 
 function Icon({ status }: { status: JobStatus }) {
-  const iconProps = { className: "w-5 h-5" };
+  const iconProps = { className: "w-4 h-4" };
   switch (status) {
     case "queued":
       return (
