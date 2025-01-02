@@ -13,11 +13,13 @@ import { Job } from "~/models/job";
 interface Props extends HTMLAttributes<HTMLTableElement> {
   jobs?: Job[];
   skeleton?: boolean;
+  onClickRow?: (job: Job) => void;
 }
 
 export default function JobsTable({
   jobs,
   skeleton = false,
+  onClickRow,
   className,
   ...props
 }: Props) {
@@ -73,7 +75,7 @@ export default function JobsTable({
           </TableRow>
         ) : (
           jobs?.map((job) => (
-            <TableRow key={job.id}>
+            <TableRow key={job.id} onClick={() => onClickRow?.(job)}>
               {renderCell(() => job.id)}
               {renderCell(() => job.type)}
               {renderCell(() => job.caller)}

@@ -1,4 +1,4 @@
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import { useLoaderData, useNavigate, useSearchParams } from "@remix-run/react";
 import { LoaderCircle } from "lucide-react";
 import { useCallback, useRef, useState } from "react";
 
@@ -54,10 +54,18 @@ export default function JobsScreen() {
     [observer, hasMore, fetchJobs],
   );
 
+  const navigate = useNavigate();
+  const onClickRow = useCallback(
+    (item: Job) => {
+      navigate(`/jobs/${item.id}`);
+    },
+    [navigate],
+  );
+
   return (
     <div className="mx-auto overflow-x-auto mb-12">
       <div className="relative flex flex-col items-center">
-        <JobsTable jobs={jobs} />
+        <JobsTable jobs={jobs} onClickRow={onClickRow} />
         {hasMore && (
           <div
             ref={loaderRef}
