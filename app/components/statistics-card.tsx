@@ -1,11 +1,29 @@
 import { Link } from "@remix-run/react";
-import { HTMLAttributes } from "react";
+import { CheckCircle, Clock, Loader2, RefreshCcw, XCircle } from "lucide-react";
+import { HTMLAttributes, useMemo } from "react";
 
-import Spacer from "~/components/spacer";
+import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import { JobStatistics, JobStatus, JobStatuses } from "~/models/job-statistics";
 
-interface Props extends HTMLAttributes<HTMLUListElement> {
+export interface JobStatistics {
+  readonly queued: number;
+  readonly processing: number;
+  readonly retrying: number;
+  readonly success: number;
+  readonly failed: number;
+}
+
+export type JobStatus = keyof JobStatistics;
+
+export const JobStatuses: JobStatus[] = [
+  "queued",
+  "processing",
+  "retrying",
+  "success",
+  "failed",
+];
+
+interface Props extends HTMLAttributes<HTMLDivElement> {
   statistics: JobStatistics;
 }
 
@@ -14,53 +32,100 @@ export default function StatisticsCard({
   className,
   ...props
 }: Props) {
+  const total = useMemo(
+    () => Object.values(statistics).reduce((sum, count) => sum + count, 0),
+    [statistics],
+  );
+
   return (
-    <ul
-      className={cn(
-        "flex flex-col justify-between p-2 list-none",
-        "rounded-sm bg-card border border-gray-200",
-        "min-w-[200px] md:min-w-[300px] md:flex md:space-x-2",
-        "md:flex-row",
-        className,
-      )}
-      {...props}
-    >
-      <li>
-        <Spacer />
-      </li>
-      {JobStatuses.map((status) => (
-        <li key={status}>
-          <Item status={status} statistics={statistics} />
-        </li>
-      ))}
-      <li>
-        <Spacer />
-      </li>
-    </ul>
+    <Card className={cn("w-full", className)} {...props}>
+      <CardContent className="p-4">
+        <div className="flex flex-wrap justify-between gap-2">
+          {JobStatuses.map((status) => (
+            <Item
+              key={status}
+              status={status}
+              count={statistics[status]}
+              total={total}
+            />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function Item({
   status,
-  statistics,
+  count,
+  total,
 }: {
   status: JobStatus;
-  statistics: JobStatistics;
+  count: number;
+  total: number;
 }) {
+  const percentage = useMemo(
+    () => (total === 0 ? 0 : (count / total) * 100),
+    [count, total],
+  );
+
   return (
-    <div
+    <Link
+      to={`/jobs?status=${status}`}
       className={cn(
-        "flex flex-row items-center justify-between",
-        "md:flex-col-reverse md:space-x-0",
+        "group flex flex-col items-center p-2 rounded-lg hover:bg-accent transition-colors",
+        "w-[calc(20%-0.4rem)]",
       )}
     >
-      <Link
-        to={`/jobs?status=${status}`}
-        className="hover:underline hover:underline-offset-4 hover:text-primary"
-      >
-        <div className="text-sm md:text-sm">{status}</div>
-      </Link>
-      <div className="text-sm md:text-sm">{statistics[status]}</div>
-    </div>
+      <Icon status={status} />
+      <span className="text-xs font-medium capitalize mt-1 text-center">
+        {status}
+      </span>
+      <span className="text-sm font-bold mt-1">{count}</span>
+      <span className="text-xs text-muted-foreground mt-1">
+        {percentage.toFixed(1)}%
+      </span>
+    </Link>
   );
+}
+
+function Icon({ status }: { status: JobStatus }) {
+  const iconProps = { className: "w-5 h-5" };
+  switch (status) {
+    case "queued":
+      return (
+        <Clock
+          {...iconProps}
+          className={cn(iconProps.className, "text-yellow-500")}
+        />
+      );
+    case "processing":
+      return (
+        <Loader2
+          {...iconProps}
+          className={cn(iconProps.className, "text-blue-500")}
+        />
+      );
+    case "retrying":
+      return (
+        <RefreshCcw
+          {...iconProps}
+          className={cn(iconProps.className, "text-purple-500")}
+        />
+      );
+    case "success":
+      return (
+        <CheckCircle
+          {...iconProps}
+          className={cn(iconProps.className, "text-green-500")}
+        />
+      );
+    case "failed":
+      return (
+        <XCircle
+          {...iconProps}
+          className={cn(iconProps.className, "text-red-500")}
+        />
+      );
+  }
 }

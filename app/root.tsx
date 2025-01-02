@@ -64,11 +64,13 @@ export default function App() {
     <div>
       <Header />
       <main className="pt-16">
-        <Container>
+        <div className="w-full px-4">
           <StatisticsCard
             statistics={statistics}
-            className={cn("mx-2 my-4", "md:mx-12")}
+            className={cn("w-full max-w-7xl mx-auto my-4")}
           />
+        </div>
+        <Container>
           <Outlet />
         </Container>
       </main>
