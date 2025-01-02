@@ -5,7 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import { Job } from "~/models/job";
 import JobsTable from "~/routes/jobs._index/components/jobs-table";
 
-interface LoaderData {
+export interface LoaderData {
   jobs: Job[];
   nextCursor: number;
 }
@@ -35,7 +35,6 @@ export default function JobsScreen() {
       }
     } catch (e) {
       console.error("failed to fetch jobs", e);
-      throw new Error("failed to fetch jobs");
     }
   }, [status, nextCursor]);
 

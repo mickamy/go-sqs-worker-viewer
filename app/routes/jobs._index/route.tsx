@@ -2,7 +2,9 @@ import { LoaderFunction } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 
 import { JobStatuses } from "~/models/job-statistics";
-import JobsScreen from "~/routes/jobs._index/components/jobs-screen";
+import JobsScreen, {
+  LoaderData,
+} from "~/routes/jobs._index/components/jobs-screen";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -23,7 +25,8 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response(null, { status: response.status });
   }
 
-  return await response.json();
+  const data: LoaderData = await response.json();
+  return data;
 };
 
 export default function Jobs() {

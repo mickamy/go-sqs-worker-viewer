@@ -71,7 +71,7 @@ export default function JobsTable({
               >
                 {columns.map((column) => (
                   <TableCell key={column.key} className="py-3 px-4">
-                    {renderCellContent(column, job)}
+                    {renderCell(column, job)}
                   </TableCell>
                 ))}
                 <TableCell className="w-8">
@@ -86,17 +86,17 @@ export default function JobsTable({
   );
 }
 
-function renderCellContent(column: ColumnDef, job: Job): ReactNode {
+function renderCell(column: ColumnDef, job: Job): ReactNode {
   switch (column.key) {
     case "id":
-      return <span className="font-medium">{job.id}</span>;
+      return <span className="font-medium truncate">{job.id}</span>;
     case "type":
       return <Badge variant="outline">{job.type}</Badge>;
     case "caller":
       return <span className="text-muted-foreground">{job.caller}</span>;
     case "createdAt":
       return (
-        <span className="text-muted-foreground">
+        <span className="text-muted-foreground truncate">
           {format(new Date(job.created_at), "PPp")}
         </span>
       );
