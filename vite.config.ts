@@ -9,6 +9,9 @@ declare module "@remix-run/node" {
 }
 
 export default defineConfig({
+  build: {
+    target: "esnext",
+  },
   plugins: [
     remix({
       future: {
