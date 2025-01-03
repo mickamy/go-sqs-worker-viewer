@@ -1,7 +1,7 @@
 import { LoaderFunction } from "@remix-run/node";
 
 import { Job } from "~/models/job";
-import { JobStatus, JobStatuses } from "~/models/job-statistics";
+import { JobStatus, JobStatuses } from "~/models/job-status";
 import { getJobs } from "~/service/job-service";
 
 const chunkSize = 100;

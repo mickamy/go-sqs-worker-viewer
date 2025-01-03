@@ -1,5 +1,6 @@
 import { scanAll } from "~/lib/redis";
-import { JobStatistics, JobStatus } from "~/models/job-statistics";
+import { JobStatistics } from "~/models/job-statistics";
+import { JobStatus } from "~/models/job-status";
 
 export async function getJobStatistics(): Promise<JobStatistics> {
   const keys = await scanAll({ pattern: "gsw:statuses:*" });

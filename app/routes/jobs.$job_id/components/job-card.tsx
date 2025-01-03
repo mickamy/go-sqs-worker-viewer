@@ -26,15 +26,13 @@ import {
 } from "~/components/ui/select";
 import { cn } from "~/lib/utils";
 import { Job } from "~/models/job";
-import { JobStatus } from "~/models/job-statistics";
+import { getSelectableJobStatuses, JobStatus } from "~/models/job-status";
 
 interface Props {
   job: Job;
-  onStatusChange: ({
-    id,
-    newStatus,
-  }: {
+  onStatusChange: (data: {
     id: string;
+    oldStatus: JobStatus;
     newStatus: JobStatus;
   }) => void;
 }
@@ -62,13 +60,14 @@ export default function JobCard({ job, onStatusChange }: Props) {
 
   const handleStatusSubmit = () => {
     if (newStatus) {
-      onStatusChange({ id: job.id, newStatus });
+      onStatusChange({ id: job.id, oldStatus: job.status, newStatus });
       setIsStatusDialogOpen(false);
       setNewStatus(null);
     }
   };
 
-  const isStatusChangeable = selectableStatuses(job.status).length > 0;
+  const selectableJobStatus = getSelectableJobStatuses(job.status);
+  const isStatusChangeable = selectableJobStatus.length > 0;
 
   return (
     <Card className="w-full max-w-3xl mx-auto min-w-[400px] relative">
@@ -168,7 +167,7 @@ export default function JobCard({ job, onStatusChange }: Props) {
               <SelectValue placeholder="Select new status" />
             </SelectTrigger>
             <SelectContent>
-              {selectableStatuses(job.status).map((status) => (
+              {selectableJobStatus.map((status) => (
                 <SelectItem key={status} value={status}>
                   {formatStatus(status)}
                 </SelectItem>
@@ -182,23 +181,6 @@ export default function JobCard({ job, onStatusChange }: Props) {
       </Dialog>
     </Card>
   );
-}
-
-function selectableStatuses(status: JobStatus): JobStatus[] {
-  switch (status) {
-    case "queued":
-      return ["success", "failed"];
-    case "processing":
-      return [];
-    case "retrying":
-      return ["success", "failed"];
-    case "success":
-      return [];
-    case "failed":
-      return [];
-    default:
-      return [];
-  }
 }
 
 function formatDate(date: string): string {

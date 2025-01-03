@@ -1,7 +1,7 @@
 import { LoaderFunction } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 
-import { JobStatuses } from "~/models/job-statistics";
+import { JobStatuses } from "~/models/job-status";
 import JobsScreen, {
   LoaderData,
 } from "~/routes/jobs._index/components/jobs-screen";

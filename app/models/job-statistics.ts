@@ -1,20 +1,6 @@
-export interface JobStatistics {
-  readonly queued: number;
-  readonly processing: number;
-  readonly retrying: number;
-  readonly success: number;
-  readonly failed: number;
-}
+import { JobStatus } from "~/models/job-status";
 
-export type JobStatus = keyof JobStatistics;
-
-export const JobStatuses: JobStatus[] = [
-  "queued",
-  "processing",
-  "retrying",
-  "success",
-  "failed",
-];
+export type JobStatistics = Record<JobStatus, number>;
 
 export function calculateSuccessRate(statistics: JobStatistics): number {
   const total = Object.values(statistics).reduce(

@@ -4,24 +4,8 @@ import { HTMLAttributes, useMemo } from "react";
 
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-
-export interface JobStatistics {
-  readonly queued: number;
-  readonly processing: number;
-  readonly retrying: number;
-  readonly success: number;
-  readonly failed: number;
-}
-
-export type JobStatus = keyof JobStatistics;
-
-export const JobStatuses: JobStatus[] = [
-  "queued",
-  "processing",
-  "retrying",
-  "success",
-  "failed",
-];
+import { JobStatistics } from "~/models/job-statistics";
+import { JobStatus, JobStatuses } from "~/models/job-status";
 
 interface Props extends HTMLAttributes<HTMLDivElement> {
   statistics: JobStatistics;

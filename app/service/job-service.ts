@@ -1,6 +1,6 @@
 import { redis, scan, withLock } from "~/lib/redis";
 import { convertMapToJob, Job } from "~/models/job";
-import { JobStatus } from "~/models/job-statistics";
+import { getSelectableJobStatuses, JobStatus } from "~/models/job-status";
 
 export async function getJobs({
   status,
@@ -61,6 +61,11 @@ export async function updateJobStatus({
   fromStatus: JobStatus;
   toStatus: JobStatus;
 }): Promise<void> {
+  const selectable = getSelectableJobStatuses(fromStatus);
+  if (!selectable.includes(toStatus)) {
+    throw new Error("invalid status transition");
+  }
+
   return withLock({
     key: `gsw:locks:${id}`,
     execution: async () => {

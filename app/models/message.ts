@@ -1,4 +1,4 @@
-import { JobStatus } from "~/models/job-statistics";
+import { JobStatus } from "~/models/job-status";
 
 export interface Message {
   readonly type: string;
