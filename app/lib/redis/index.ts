@@ -89,7 +89,6 @@ export async function scan({
   }
 }
 
-// Generic function to acquire a lock
 export async function acquireLock(
   key: string,
   ttl: number = 5000,
@@ -105,7 +104,6 @@ export async function acquireLock(
   return null;
 }
 
-// Generic function to release a lock
 export async function releaseLock(
   key: string,
   lockValue: string,
@@ -119,7 +117,6 @@ export async function releaseLock(
   }
 }
 
-// Utility function to execute a critical section with locking
 export async function withLock<T>({
   key,
   ttl = 5000,

@@ -35,7 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
     await updateJobStatus({ id, fromStatus: oldStatus, toStatus: newStatus });
     return redirect(`/jobs/${id}`);
   } catch (error) {
-    console.error("error during updateJobStatus:", error);
+    console.error("failed to update job status", error);
     throw new Response(null, { status: 400 });
   }
 };
