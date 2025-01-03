@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSubmit } from "@remix-run/react";
 import { useCallback } from "react";
 
 import { Job } from "~/models/job";
@@ -10,11 +10,16 @@ export interface LoaderData {
 
 export default function JobScreen() {
   const { job } = useLoaderData<LoaderData>();
+
+  const submit = useSubmit();
   const onStatusChange = useCallback(
     ({ id, newStatus }: { id: string; newStatus: string }) => {
-      console.log("status change", id, newStatus);
+      submit(JSON.stringify({ id, newStatus }), {
+        method: "put",
+        encType: "application/json",
+      });
     },
-    [],
+    [submit],
   );
   return (
     <div className="mx-auto">
