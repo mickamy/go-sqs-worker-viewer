@@ -16,30 +16,39 @@ import { JobStatus } from "~/models/job-statistics";
 
 interface Props {
   job: Job;
+  onStatusChange: ({
+    id,
+    newStatus,
+  }: {
+    id: string;
+    newStatus: JobStatus;
+  }) => void;
 }
 
-export default function JobCard({ job }: Props) {
+export default function JobCard({ job, onStatusChange }: Props) {
   const [isPayloadOpen, setIsPayloadOpen] = useState(false);
 
   return (
-    <Card className="w-full min-w-[400px] max-w-3xl mx-auto">
+    <Card className="w-full max-w-3xl mx-auto min-w-[400px]">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">
-          Job Details
-          <span className="ml-2 text-lg font-normal text-gray-500">
-            ID: {job.id}
-          </span>
+        <CardTitle className="text-2xl">
+          <div className="flex flex-row items-center space-x-4">
+            <div>Job Details</div>
+            <span className="text-base font-normal text-gray-500">
+              ID: {job.id}
+            </span>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <dl className="grid grid-cols-3 gap-4">
-          <div className="col-span-1 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Type</dt>
-            <dd className="mt-1 text-sm text-gray-900">{job.type}</dd>
+        <dl className="grid grid-cols-3 gap-y-8">
+          <div className="col-span-1">
+            <dt className="text-base text-gray-500">Type</dt>
+            <dd className="mt-2 text-base">{job.type}</dd>
           </div>
-          <div className="col-span-1 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Status</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+          <div className="col-span-1">
+            <dt className="text-base text-gray-500">Status</dt>
+            <dd className="mt-2">
               <Badge
                 variant={
                   job.status === "failed"
@@ -53,20 +62,22 @@ export default function JobCard({ job }: Props) {
               </Badge>
             </dd>
           </div>
-          <div className="col-span-1 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Retry Count</dt>
-            <dd className="mt-1 text-sm text-gray-900">{job.retry_count}</dd>
+          <div className="col-span-1">
+            <dt className="text-base text-gray-500">Retry Count</dt>
+            <dd className="mt-2 text-base">{job.retry_count}</dd>
           </div>
-          <div className="col-span-3 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Caller</dt>
-            <dd className="mt-1 text-sm text-gray-900">{job.caller}</dd>
+          <div className="col-span-3">
+            <dt className="text-base text-gray-500">Caller</dt>
+            <dd className="mt-2 text-base font-mono">{job.caller}</dd>
           </div>
-          <div className="col-span-3 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Payload</dt>
-            <dd className="mt-1 text-sm text-gray-900">
+          <div className="col-span-3">
+            <dt className="text-base text-gray-500">Payload</dt>
+            <dd className="mt-2">
               <Dialog open={isPayloadOpen} onOpenChange={setIsPayloadOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="outline">View Payload</Button>
+                  <Button variant="outline" size="lg">
+                    View Payload
+                  </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
@@ -79,17 +90,15 @@ export default function JobCard({ job }: Props) {
               </Dialog>
             </dd>
           </div>
-          <div className="col-span-3 sm:col-span-1 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Created At</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {formatDate(job.created_at)}
-            </dd>
-          </div>
-          <div className="col-span-3 sm:col-span-1 flex flex-col">
-            <dt className="text-sm font-medium text-gray-500">Updated At</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {formatDate(job.updated_at)}
-            </dd>
+          <div className="col-span-3 grid grid-cols-2 gap-x-8">
+            <div className="col-span-1">
+              <dt className="text-base text-gray-500">Created At</dt>
+              <dd className="mt-2 text-base">{formatDate(job.created_at)}</dd>
+            </div>
+            <div className="col-span-1">
+              <dt className="text-base text-gray-500">Updated At</dt>
+              <dd className="mt-2 text-base">{formatDate(job.updated_at)}</dd>
+            </div>
           </div>
         </dl>
       </CardContent>
