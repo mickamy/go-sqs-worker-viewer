@@ -24,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     });
     jobs.push(...pageJobs);
     cursor = nextCursor;
-  } while (cursor > 0 && jobs.length == 0);
+  } while (cursor > 0 && jobs.length < chunkSize);
 
   return Response.json({ jobs, nextCursor: cursor });
 };
