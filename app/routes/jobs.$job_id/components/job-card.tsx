@@ -135,7 +135,7 @@ export default function JobCard({ job, onStatusChange }: Props) {
             <div className="col-span-1">
               <dt className="text-base text-gray-500">Created At</dt>
               <dd className="mt-2 text-base min-w-6">
-                {formattedDates.updatedAt}
+                {formattedDates.createdAt}
               </dd>
             </div>
             <div className="col-span-1 flex flex-col">
