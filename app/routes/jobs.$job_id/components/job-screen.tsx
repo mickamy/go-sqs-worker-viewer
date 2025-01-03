@@ -13,8 +13,8 @@ export default function JobScreen() {
 
   const submit = useSubmit();
   const onStatusChange = useCallback(
-    ({ id, newStatus }: { id: string; newStatus: string }) => {
-      submit(JSON.stringify({ id, newStatus }), {
+    (data: { id: string; oldStatus: string; newStatus: string }) => {
+      submit(JSON.stringify(data), {
         method: "put",
         encType: "application/json",
       });

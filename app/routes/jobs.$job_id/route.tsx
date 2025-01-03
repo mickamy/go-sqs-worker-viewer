@@ -10,8 +10,12 @@ export const loader: LoaderFunction = async ({ params }) => {
   if (!job_id) {
     throw new Response(null, { status: 404 });
   }
-  const job = await getJob({ id: job_id });
-  return { job } as LoaderData;
+  try {
+    const job = await getJob({ id: job_id });
+    return { job } as LoaderData;
+  } catch (error) {
+    throw new Response(null, { status: 404 });
+  }
 };
 
 export default function Job() {
@@ -31,6 +35,7 @@ export const action: ActionFunction = async ({ request }) => {
     await updateJobStatus({ id, fromStatus: oldStatus, toStatus: newStatus });
     return redirect(`/jobs/${id}`);
   } catch (error) {
+    console.error("error during updateJobStatus:", error);
     throw new Response(null, { status: 400 });
   }
 };

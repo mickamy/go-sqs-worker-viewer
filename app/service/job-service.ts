@@ -49,6 +49,9 @@ export async function getJobs({
 
 export async function getJob({ id }: { id: string }): Promise<Job> {
   const message = await redis.hgetall(`gsw:messages:${id}`);
+  if (!message || Object.keys(message).length === 0) {
+    throw new Error("job not found");
+  }
   return convertMapToJob({ id, message });
 }
 
@@ -72,7 +75,7 @@ export async function updateJobStatus({
       const tx = redis.multi();
       tx.set(`gsw:statuses:${toStatus}:${id}`, "");
       tx.del(`gsw:statuses:${fromStatus}:${id}`);
-      tx.hset(`gsw:statuses:messages:${id}`, "status", toStatus);
+      tx.hset(`gsw:messages:${id}`, "status", toStatus);
 
       const result = await tx.exec();
       if (!result) {

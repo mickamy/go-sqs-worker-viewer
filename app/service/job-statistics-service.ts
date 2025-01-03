@@ -9,7 +9,7 @@ export async function getJobStatistics(): Promise<JobStatistics> {
       const status = key.split(":")[3] as JobStatus;
       return {
         ...acc,
-        [status]: acc[status] + 1,
+        [status]: isNaN(acc[status]) ? 0 : acc[status] + 1,
       };
     },
     {
