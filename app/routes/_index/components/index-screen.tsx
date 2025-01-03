@@ -42,13 +42,9 @@ export default function IndexScreen() {
           className={cn("w-full max-w-7xl mx-auto my-4")}
         />
       </div>
-      <Container>
-        <div className="flex justify-center items-center">
-          <div className="w-full max-w-6xl px-4">
-            <Spacer size={12} />
-            <RateChart rates={data.rates} poll={poll} className="w-full" />
-          </div>
-        </div>
+      <Container className="flex justify-center items-center w-full max-w-6xl px-4">
+        <Spacer size={12} />
+        <RateChart rates={data.rates} poll={poll} className="w-full" />
       </Container>
       ;
     </>

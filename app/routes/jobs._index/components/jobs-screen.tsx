@@ -77,20 +77,16 @@ export default function JobsScreen() {
           className={cn("w-full max-w-7xl mx-auto my-4")}
         />
       </div>
-      <Container>
-        <div className="mx-auto overflow-x-auto mb-12">
-          <div className="relative flex flex-col items-center">
-            <JobsTable jobs={jobs} onClickRow={onClickRow} />
-            {hasMore && (
-              <div
-                ref={loaderRef}
-                className="relative flex justify-center items-center mt-4"
-              >
-                <LoaderCircle className="h-8 w-8 animate-spin text-gray-500" />
-              </div>
-            )}
+      <Container className="relative flex flex-col mb-12 items-center mx-auto overflow-x-auto">
+        <JobsTable jobs={jobs} onClickRow={onClickRow} />
+        {hasMore && (
+          <div
+            ref={loaderRef}
+            className="relative flex justify-center items-center mt-4"
+          >
+            <LoaderCircle className="h-8 w-8 animate-spin text-gray-500" />
           </div>
-        </div>
+        )}
       </Container>
     </>
   );
