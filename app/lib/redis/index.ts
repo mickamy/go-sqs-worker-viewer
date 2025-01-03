@@ -1,4 +1,5 @@
 import Redis from "ioredis";
+import { v4 as uuidv4 } from "uuid";
 
 async function init() {
   const client = new Redis(process.env.REDIS_URL);
@@ -85,5 +86,57 @@ export async function scan({
   } catch (err) {
     console.error("error during SCAN:", err);
     throw err;
+  }
+}
+
+// Generic function to acquire a lock
+export async function acquireLock(
+  key: string,
+  ttl: number = 5000,
+): Promise<string | null> {
+  const lockValue = uuidv4();
+
+  const result = await redis.set(key, lockValue, "PX", ttl, "NX");
+
+  if (result) {
+    return lockValue;
+  }
+
+  return null;
+}
+
+// Generic function to release a lock
+export async function releaseLock(
+  key: string,
+  lockValue: string,
+): Promise<void> {
+  const currentValue = await redis.get(key);
+
+  if (currentValue === lockValue) {
+    await redis.del(key);
+  } else {
+    throw new Error(`failed to release lock for key: ${key}`);
+  }
+}
+
+// Utility function to execute a critical section with locking
+export async function withLock<T>({
+  key,
+  ttl = 5000,
+  execution,
+}: {
+  key: string;
+  ttl?: number;
+  execution: () => Promise<T>;
+}): Promise<T> {
+  const lockValue = await acquireLock(key, ttl);
+  if (!lockValue) {
+    throw new Error(`failed to acquire lock for key: ${key}`);
+  }
+
+  try {
+    return await execution();
+  } finally {
+    await releaseLock(key, lockValue);
   }
 }
