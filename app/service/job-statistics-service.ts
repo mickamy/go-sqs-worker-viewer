@@ -2,10 +2,10 @@ import { scanAll } from "~/lib/redis";
 import { JobStatistics, JobStatus } from "~/models/job-statistics";
 
 export async function getJobStatistics(): Promise<JobStatistics> {
-  const keys = await scanAll({ pattern: "statuses:*" });
+  const keys = await scanAll({ pattern: "gsw:statuses:*" });
   return Object.keys(keys).reduce<JobStatistics>(
     (acc, key) => {
-      const status = key.split(":")[2] as JobStatus;
+      const status = key.split(":")[3] as JobStatus;
       return {
         ...acc,
         [status]: acc[status] + 1,

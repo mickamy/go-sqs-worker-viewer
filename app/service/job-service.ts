@@ -12,15 +12,15 @@ export async function getJobs({
   chunkSize: number;
 }): Promise<{ jobs: Job[]; nextCursor: number }> {
   const { response: idToStatus, nextCursor } = await scan({
-    pattern: `statuses:*:${status}`,
+    pattern: `gsw:statuses:*:${status}`,
     cursor,
     chunkSize: chunkSize,
   });
 
-  const ids = Object.keys(idToStatus).map((key) => key.split(":")[1]);
+  const ids = Object.keys(idToStatus).map((key) => key.split(":")[2]);
 
   const pipeline = redis.pipeline();
-  ids.forEach((id) => pipeline.hgetall(`messages:${id}`));
+  ids.forEach((id) => pipeline.hgetall(`gsw:messages:${id}`));
   const responses = await pipeline.exec();
 
   if (!responses) {
@@ -48,6 +48,6 @@ export async function getJobs({
 }
 
 export async function getJob({ id }: { id: string }): Promise<Job> {
-  const message = await redis.hgetall(`messages:${id}`);
+  const message = await redis.hgetall(`gsw:messages:${id}`);
   return convertMapToJob({ id, message });
 }
