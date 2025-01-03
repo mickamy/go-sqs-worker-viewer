@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -40,6 +40,18 @@ interface Props {
 }
 
 export default function JobCard({ job, onStatusChange }: Props) {
+  const [formattedDates, setFormattedDates] = useState({
+    createdAt: "",
+    updatedAt: "",
+  });
+
+  useEffect(() => {
+    setFormattedDates({
+      createdAt: formatDate(job.created_at),
+      updatedAt: formatDate(job.updated_at),
+    });
+  }, [job]);
+
   const [isPayloadOpen, setIsPayloadOpen] = useState(false);
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<JobStatus | null>(null);
@@ -123,11 +135,15 @@ export default function JobCard({ job, onStatusChange }: Props) {
           <div className="col-span-3 grid grid-cols-2 gap-x-8">
             <div className="col-span-1">
               <dt className="text-base text-gray-500">Created At</dt>
-              <dd className="mt-2 text-base">{formatDate(job.created_at)}</dd>
+              <dd className="mt-2 text-base min-w-6">
+                {formattedDates.updatedAt}
+              </dd>
             </div>
             <div className="col-span-1 flex flex-col">
               <dt className="text-base text-gray-500">Updated At</dt>
-              <dd className="mt-2 text-base">{formatDate(job.updated_at)}</dd>
+              <dd className="mt-2 text-base min-w-6">
+                {formattedDates.updatedAt}
+              </dd>
             </div>
           </div>
         </dl>
