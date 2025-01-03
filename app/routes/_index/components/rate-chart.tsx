@@ -1,12 +1,5 @@
 import { HTMLAttributes, useEffect, useState } from "react";
-import {
-  Area,
-  AreaChart,
-  CartesianGrid,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import colors from "tailwindcss/colors";
 
 import {
@@ -55,7 +48,7 @@ export default function RateChart({ rates, poll, className, ...props }: Props) {
   }, [pollingInterval, poll]);
 
   return (
-    <Card className={cn("w-full", className)} {...props}>
+    <Card className={cn("w-full min-w-[400px]", className)} {...props}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex-1">
           <CardTitle className="text-2xl font-bold">Job Success Rate</CardTitle>
@@ -85,89 +78,87 @@ export default function RateChart({ rates, poll, className, ...props }: Props) {
           config={chartConfig}
           className={cn("aspect-auto h-[350px]", className)}
         >
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={rates}
-              margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-            >
-              <defs>
-                <linearGradient id="fillSuccess" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={chartConfig.success.color}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={chartConfig.success.color}
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-                <linearGradient id="fillFailure" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="5%"
-                    stopColor={chartConfig.failure.color}
-                    stopOpacity={0.8}
-                  />
-                  <stop
-                    offset="95%"
-                    stopColor={chartConfig.failure.color}
-                    stopOpacity={0.1}
-                  />
-                </linearGradient>
-              </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-                stroke="#e5e7eb"
-              />
-              <XAxis
-                dataKey="timestamp"
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={() => ""}
-                stroke="#9ca3af"
-              />
-              <YAxis
-                tickLine={false}
-                axisLine={false}
-                scale="auto"
-                domain={[0, 1]}
-                ticks={[0, 0.2, 0.4, 0.6, 0.8, 1.0]}
-                stroke="#9ca3af"
-              />
-              <ChartTooltip
-                cursor={{ stroke: "#6b7280", strokeWidth: 1 }}
-                content={
-                  <ChartTooltipContent
-                    labelFormatter={(value: string) => {
-                      return new Date(value).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                      });
-                    }}
-                  />
-                }
-              />
-              <Area
-                dataKey="success"
-                type="monotone"
-                fill="url(#fillSuccess)"
-                stroke={chartConfig.success.color}
-                strokeWidth={2}
-              />
-              <Area
-                dataKey="failure"
-                type="monotone"
-                fill="url(#fillFailure)"
-                stroke={chartConfig.failure.color}
-                strokeWidth={2}
-              />
-              <ChartLegend content={<ChartLegendContent />} />
-            </AreaChart>
-          </ResponsiveContainer>
+          <AreaChart
+            data={rates}
+            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="fillSuccess" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={chartConfig.success.color}
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={chartConfig.success.color}
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+              <linearGradient id="fillFailure" x1="0" y1="0" x2="0" y2="1">
+                <stop
+                  offset="5%"
+                  stopColor={chartConfig.failure.color}
+                  stopOpacity={0.8}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={chartConfig.failure.color}
+                  stopOpacity={0.1}
+                />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="#e5e7eb"
+            />
+            <XAxis
+              dataKey="timestamp"
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={() => ""}
+              stroke="#9ca3af"
+            />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              scale="auto"
+              domain={[0, 1]}
+              ticks={[0, 0.2, 0.4, 0.6, 0.8, 1.0]}
+              stroke="#9ca3af"
+            />
+            <ChartTooltip
+              cursor={{ stroke: "#6b7280", strokeWidth: 1 }}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(value: string) => {
+                    return new Date(value).toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      hour: "numeric",
+                      minute: "numeric",
+                    });
+                  }}
+                />
+              }
+            />
+            <Area
+              dataKey="success"
+              type="monotone"
+              fill="url(#fillSuccess)"
+              stroke={chartConfig.success.color}
+              strokeWidth={2}
+            />
+            <Area
+              dataKey="failure"
+              type="monotone"
+              fill="url(#fillFailure)"
+              stroke={chartConfig.failure.color}
+              strokeWidth={2}
+            />
+            <ChartLegend content={<ChartLegendContent />} />
+          </AreaChart>
         </ChartContainer>
       </CardContent>
     </Card>

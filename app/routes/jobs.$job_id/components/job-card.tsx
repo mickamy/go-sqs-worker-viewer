@@ -22,7 +22,7 @@ export default function JobCard({ job }: Props) {
   const [isPayloadOpen, setIsPayloadOpen] = useState(false);
 
   return (
-    <Card className="w-full max-w-3xl mx-auto mt-8">
+    <Card className="w-full min-w-[400px] max-w-3xl mx-auto mt-8">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
           Job Details

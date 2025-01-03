@@ -9,5 +9,9 @@ export interface LoaderData {
 
 export default function JobScreen() {
   const { job } = useLoaderData<LoaderData>();
-  return <JobCard job={job} />;
+  return (
+    <div className="mx-auto">
+      <JobCard job={job} />
+    </div>
+  );
 }

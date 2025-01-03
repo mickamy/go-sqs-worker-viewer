@@ -33,7 +33,11 @@ export default function StatisticsCard({
   ...props
 }: Props) {
   const total = useMemo(
-    () => Object.values(statistics).reduce((sum, count) => sum + count, 0),
+    () =>
+      Object.values(statistics).reduce(
+        (sum: number, count: number) => sum + count,
+        0,
+      ),
     [statistics],
   );
 
