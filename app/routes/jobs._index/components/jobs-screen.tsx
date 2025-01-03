@@ -77,7 +77,7 @@ export default function JobsScreen() {
           className={cn("w-full max-w-7xl mx-auto my-4")}
         />
       </div>
-      <Container className="relative flex flex-col mb-12 items-center mx-auto overflow-x-auto">
+      <Container className="relative flex flex-col mb-12 items-center mx-auto">
         <JobsTable jobs={jobs} onClickRow={onClickRow} />
         {hasMore && (
           <div
