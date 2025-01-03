@@ -37,10 +37,7 @@ export default function JobsTable({
 
   return (
     <div
-      className={cn(
-        "overflow-x-auto rounded-lg border min-w-[800px]",
-        className,
-      )}
+      className={cn("rounded-lg border min-w-[800px]", className)}
       {...props}
     >
       <Table>
