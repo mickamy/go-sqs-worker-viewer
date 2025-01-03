@@ -22,7 +22,7 @@ export default function JobCard({ job }: Props) {
   const [isPayloadOpen, setIsPayloadOpen] = useState(false);
 
   return (
-    <Card className="w-full min-w-[400px] max-w-3xl mx-auto mt-8">
+    <Card className="w-full min-w-[400px] max-w-3xl mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
           Job Details
@@ -41,7 +41,13 @@ export default function JobCard({ job }: Props) {
             <dt className="text-sm font-medium text-gray-500">Status</dt>
             <dd className="mt-1 text-sm text-gray-900">
               <Badge
-                variant={job.status === "failed" ? "destructive" : "secondary"}
+                variant={
+                  job.status === "failed"
+                    ? "destructive"
+                    : job.status === "success"
+                      ? "default"
+                      : "secondary"
+                }
               >
                 {formatStatus(job.status)}
               </Badge>
