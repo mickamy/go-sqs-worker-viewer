@@ -1,11 +1,16 @@
 import { useLoaderData } from "@remix-run/react";
 import { useCallback, useState } from "react";
 
+import Container from "~/components/container";
 import Spacer from "~/components/spacer";
+import StatisticsCard from "~/components/statistics-card";
+import { cn } from "~/lib/utils";
 import { JobRate } from "~/models/job-rate";
+import { JobStatistics } from "~/models/job-statistics";
 import RateChart from "~/routes/_index/components/rate-chart";
 
 interface LoaderData {
+  statistics: JobStatistics;
   rate: JobRate;
 }
 
@@ -30,11 +35,22 @@ export default function IndexScreen() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center">
-      <div className="w-full max-w-6xl px-4">
-        <Spacer size={12} />
-        <RateChart rates={data.rates} poll={poll} className="w-full" />
+    <>
+      <div className="w-full px-4">
+        <StatisticsCard
+          statistics={data.statistics}
+          className={cn("w-full max-w-7xl mx-auto my-4")}
+        />
       </div>
-    </div>
+      <Container>
+        <div className="flex justify-center items-center">
+          <div className="w-full max-w-6xl px-4">
+            <Spacer size={12} />
+            <RateChart rates={data.rates} poll={poll} className="w-full" />
+          </div>
+        </div>
+      </Container>
+      ;
+    </>
   );
 }

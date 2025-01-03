@@ -22,7 +22,7 @@ export default function JobScreen() {
     [submit],
   );
   return (
-    <div className="mx-auto">
+    <div className="mx-auto mt-8">
       <JobCard job={job} onStatusChange={onStatusChange} />
     </div>
   );

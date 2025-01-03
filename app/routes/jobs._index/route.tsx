@@ -5,6 +5,7 @@ import { JobStatuses } from "~/models/job-status";
 import JobsScreen, {
   LoaderData,
 } from "~/routes/jobs._index/components/jobs-screen";
+import { getJobStatistics } from "~/service/job-statistics-service";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
@@ -25,8 +26,10 @@ export const loader: LoaderFunction = async ({ request }) => {
     throw new Response(null, { status: response.status });
   }
 
-  const data: LoaderData = await response.json();
-  return data;
+  const statistics = await getJobStatistics();
+
+  const { jobs, nextCursor } = await response.json();
+  return { statistics, jobs, nextCursor } as LoaderData;
 };
 
 export default function Jobs() {

@@ -1,4 +1,4 @@
-import type { LinksFunction, LoaderFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import {
   isRouteErrorResponse,
   Links,
@@ -6,17 +6,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
   useRouteError,
 } from "@remix-run/react";
 import { ReactNode } from "react";
 
-import Container from "~/components/container";
 import Header from "~/components/header";
-import StatisticsCard from "~/components/statistics-card";
-import { cn } from "~/lib/utils";
-import { JobStatistics } from "~/models/job-statistics";
-import { getJobStatistics } from "~/service/job-statistics-service";
 import tailwindStyles from "~/tailwind.css?url";
 
 export const links: LinksFunction = () => [
@@ -32,13 +26,6 @@ export const links: LinksFunction = () => [
     href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
-
-export const loader: LoaderFunction = async () => {
-  return {
-    statistics: await getJobStatistics(),
-  };
-};
-
 export function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
@@ -59,20 +46,11 @@ export function Layout({ children }: { children: ReactNode }) {
 }
 
 export default function App() {
-  const { statistics } = useLoaderData<{ statistics: JobStatistics }>();
   return (
     <div>
       <Header />
       <main className="pt-16">
-        <div className="w-full px-4">
-          <StatisticsCard
-            statistics={statistics}
-            className={cn("w-full max-w-7xl mx-auto my-4")}
-          />
-        </div>
-        <Container>
-          <Outlet />
-        </Container>
+        <Outlet />
       </main>
     </div>
   );
