@@ -27,7 +27,7 @@ export default function IndexScreen() {
       const newData = await response.json();
       setData((prevState) => ({
         ...newData,
-        rates: [newData.rate, ...prevState.rates],
+        rates: [...prevState.rates, newData.rate],
       }));
     } catch (e) {
       console.error("failed to poll", e);
