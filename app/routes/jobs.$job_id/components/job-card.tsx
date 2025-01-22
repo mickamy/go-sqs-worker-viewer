@@ -109,7 +109,9 @@ export default function JobCard({ job, onStatusChange }: Props) {
           </div>
           <div className="col-span-3">
             <dt className="text-base text-gray-500">Caller</dt>
-            <dd className="mt-2 text-base font-mono">{job.caller}</dd>
+            <dd className="mt-2 text-base font-mono break-words">
+              {job.caller}
+            </dd>
           </div>
           <div className="col-span-3">
             <dt className="text-base text-gray-500">Payload</dt>
