@@ -1,8 +1,19 @@
-import Redis from "ioredis";
+import Redis, { type RedisOptions } from "ioredis";
 import { v4 as uuidv4 } from "uuid";
 
 async function init() {
-  const client = new Redis(process.env.REDIS_URL);
+  const url = new URL(process.env.REDIS_URL!);
+
+  const opts: RedisOptions = {
+    host: url.hostname,
+    port: Number(url.port),
+    username: url.username,
+    password: url.password,
+  };
+  if (url.protocol === "rediss:") {
+    opts.tls = {};
+  }
+  const client = new Redis(opts);
 
   client.on("error", (err: Error) => {
     console.error("redis connection error:", err);
