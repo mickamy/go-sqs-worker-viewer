@@ -1,3 +1,4 @@
+import { enqueueToSqs } from "~/lib/aws/sqs";
 import { redis, scan, withLock } from "~/lib/redis";
 import { convertMapToJob, Job } from "~/models/job";
 import { getSelectableJobStatuses, JobStatus } from "~/models/job-status";
@@ -78,14 +79,37 @@ export async function updateJobStatus({
       tx.hset(`gsw:messages:${id}`, "status", toStatus);
 
       const result = await tx.exec();
-      if (!result) {
+      if (!result || result.some(([err]) => err)) {
+        throw new Error("error during transaction execution");
+      }
+    },
+  });
+}
+
+export async function retryJob({ id }: { id: string }): Promise<void> {
+  const job = await getJob({ id });
+  if (job.status !== "failed") {
+    throw new Error("job can only be retried if it has failed");
+  }
+
+  await withLock({
+    key: `gsw:locks:${id}`,
+    execution: async () => {
+      const tx = redis.multi();
+      tx.set(`gsw:statuses:queued:${id}`, "");
+      tx.del(`gsw:statuses:failed:${id}`);
+      tx.hset(`gsw:messages:${id}`, "status", "queued");
+      tx.hset(`gsw:messages:${id}`, "retry_count", 0);
+
+      const result = await tx.exec();
+      if (!result || result.some(([err]) => err)) {
         throw new Error("error during transaction execution");
       }
 
-      const hasError = result.some(([err]) => err !== null);
-      if (hasError) {
-        throw new Error("error during transaction execution");
-      }
+      await enqueueToSqs({
+        queueUrl: process.env.SQS_WORKER_URL!,
+        messageBody: JSON.stringify(await redis.hgetall(`gsw:messages:${id}`)),
+      });
     },
   });
 }

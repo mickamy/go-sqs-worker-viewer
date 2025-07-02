@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useSubmit } from "@remix-run/react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -24,20 +25,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { cn } from "~/lib/utils";
 import { Job } from "~/models/job";
 import { getSelectableJobStatuses, JobStatus } from "~/models/job-status";
+import RetryJobDialog from "~/routes/jobs.$job_id/components/retry-job-dialog";
 
 interface Props {
   job: Job;
-  onStatusChange: (data: {
-    id: string;
-    oldStatus: JobStatus;
-    newStatus: JobStatus;
-  }) => void;
 }
 
-export default function JobCard({ job, onStatusChange }: Props) {
+export default function JobCard({ job }: Props) {
   const [formattedDates, setFormattedDates] = useState({
     createdAt: "",
     updatedAt: "",
@@ -58,16 +54,30 @@ export default function JobCard({ job, onStatusChange }: Props) {
     setNewStatus(status);
   };
 
-  const handleStatusSubmit = () => {
+  const submit = useSubmit();
+  const onStatusChange = useCallback(
+    (data: { id: string; oldStatus: string; newStatus: string }) => {
+      submit(JSON.stringify({ ...data, intent: "update" }), {
+        method: "put",
+        encType: "application/json",
+      });
+    },
+    [submit],
+  );
+
+  const handleStatusSubmit = useCallback(() => {
     if (newStatus) {
       onStatusChange({ id: job.id, oldStatus: job.status, newStatus });
       setIsStatusDialogOpen(false);
       setNewStatus(null);
     }
-  };
+  }, [onStatusChange, job, newStatus]);
 
   const selectableJobStatus = getSelectableJobStatuses(job.status);
+  console.log(selectableJobStatus, job.status);
   const isStatusChangeable = selectableJobStatus.length > 0;
+
+  const [retryDialogOpen, setRetryDialogOpen] = useState(false);
 
   return (
     <Card className="w-full max-w-3xl mx-auto min-w-[400px] relative">
@@ -149,12 +159,17 @@ export default function JobCard({ job, onStatusChange }: Props) {
           </div>
         </dl>
       </CardContent>
-      <CardFooter
-        className={cn("flex justify-end", !isStatusChangeable && "hidden")}
-      >
-        <Button variant="default" onClick={() => setIsStatusDialogOpen(true)}>
-          Change Job Status
-        </Button>
+      <CardFooter className="flex justify-end">
+        {isStatusChangeable && (
+          <Button variant="default" onClick={() => setIsStatusDialogOpen(true)}>
+            Change Job Status
+          </Button>
+        )}
+        {job.status === "failed" && (
+          <Button variant="default" onClick={() => setRetryDialogOpen(true)}>
+            Retry Job
+          </Button>
+        )}
       </CardFooter>
       <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
         <DialogContent>
@@ -181,6 +196,11 @@ export default function JobCard({ job, onStatusChange }: Props) {
           </Button>
         </DialogContent>
       </Dialog>
+      <RetryJobDialog
+        job={job}
+        open={retryDialogOpen}
+        setOpen={setRetryDialogOpen}
+      />
     </Card>
   );
 }

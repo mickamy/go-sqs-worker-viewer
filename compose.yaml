@@ -4,10 +4,15 @@ services:
       context: .
       target: dev
     environment:
+      - AWS_REGION=ap-northeast-1
+      - AWS_ACCESS_KEY_ID=localstack
+      - AWS_SECRET_ACCESS_KEY=localstack
       - REDIS_URL=redis://:password@redis:6379/0
+      - SQS_WORKER_URL=http://localhost.localstack.cloud:4566/000000000000/worker-queue
     volumes:
       - .:/usr/src:cached
       - node_modules:/usr/src/node_modules
+    command: sh -c "npm ci && npm run dev"
     ports:
       - "5173:5173"
     networks:
