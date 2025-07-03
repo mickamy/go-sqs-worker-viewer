@@ -8,7 +8,8 @@ services:
       - AWS_ACCESS_KEY_ID=localstack
       - AWS_SECRET_ACCESS_KEY=localstack
       - REDIS_URL=redis://:password@redis:6379/0
-      - SQS_WORKER_URL=http://localhost.localstack.cloud:4566/000000000000/worker-queue
+      - SQS_WORKER_URL=http://go-sqs-worker-localstack-1:4566/000000000000/worker-queue
+      - SQS_ENDPOINT_URL=http://go-sqs-worker-localstack-1:4566
     volumes:
       - .:/usr/src:cached
       - node_modules:/usr/src/node_modules

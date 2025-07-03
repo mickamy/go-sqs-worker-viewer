@@ -55,7 +55,6 @@ export const action: ActionFunction = async ({ request }) => {
         await retryJob({ id });
         return redirect(`/jobs/${id}`);
       } catch (error) {
-        console.error("failed to retry job", error);
         throw new Response(null, { status: 400 });
       }
     }

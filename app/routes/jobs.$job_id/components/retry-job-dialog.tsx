@@ -29,7 +29,8 @@ export default function RetryJobDialog({ job, open, setOpen }: Props) {
         encType: "application/json",
       },
     );
-  }, [submit, job.id]);
+    setOpen(false);
+  }, [submit, job.id, setOpen]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
