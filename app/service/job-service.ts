@@ -18,6 +18,10 @@ export async function getJobs({
     chunkSize: chunkSize,
   });
 
+  const ids = Object.keys(idToStatus).map((key) => {
+    return key.split(":")[2];
+  });
+
   const pipeline = redis.pipeline();
   ids.forEach((id) => pipeline.hgetall(`gsw:messages:${id}`));
   const responses = await pipeline.exec();
