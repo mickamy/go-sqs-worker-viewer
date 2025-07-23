@@ -16,7 +16,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   }
 
   const response = await fetch(
-    new URL(`/api/jobs?status=${status}`, request.url).toString(),
+    new URL(
+      `/api/jobs?status=${status}`,
+      `http://localhost:${process.env.PORT}`,
+    ).toString(),
     {
       headers: request.headers,
     },
