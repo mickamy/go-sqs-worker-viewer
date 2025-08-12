@@ -66,7 +66,7 @@ export const action: ActionFunction = async ({ request }) => {
       }
       try {
         await deleteJob({ id });
-        return redirect("/");
+        return redirect("/jobs?status=failed");
       } catch (error) {
         console.error("failed to delete job", error);
         throw new Response(null, { status: 500 });
