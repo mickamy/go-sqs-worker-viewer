@@ -1,8 +1,5 @@
 import { JobRate } from "~/models/job-rate";
-import {
-  calculateFailureRate,
-  calculateSuccessRate,
-} from "~/models/job-statistics";
+import { calculateFailureRate } from "~/models/job-statistics";
 import { getJobStatistics } from "~/service/job-statistics-service";
 
 export const loader = async () => {
@@ -10,7 +7,6 @@ export const loader = async () => {
 
   const rate: JobRate = {
     timestamp: new Date().toISOString(),
-    success: calculateSuccessRate(statistics),
     failure: calculateFailureRate(statistics),
   };
 

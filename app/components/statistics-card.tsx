@@ -29,7 +29,7 @@ export default function StatisticsCard({
     <Card className={cn("w-full min-w-[400px]", className)} {...props}>
       <CardContent className="p-4">
         <div className="flex flex-wrap justify-between gap-2">
-          {JobStatuses.map((status) => (
+          {JobStatuses.filter((it) => it !== "success").map((status) => (
             <Item
               key={status}
               status={status}

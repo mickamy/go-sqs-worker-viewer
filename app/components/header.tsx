@@ -18,7 +18,6 @@ const navItems = [
   { label: "Queued", href: "/jobs?status=queued" },
   { label: "Processing", href: "/jobs?status=processing" },
   { label: "Retrying", href: "/jobs?status=retrying" },
-  { label: "Success", href: "/jobs?status=success" },
   { label: "Failed", href: "/jobs?status=failed" },
 ];
 
