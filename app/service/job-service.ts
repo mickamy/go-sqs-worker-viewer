@@ -120,3 +120,24 @@ export async function retryJob({ id }: { id: string }): Promise<void> {
     },
   });
 }
+
+export async function deleteJob({ id }: { id: string }): Promise<void> {
+  const job = await getJob({ id });
+  if (!job) {
+    throw new Error("job not found");
+  }
+
+  return withLock({
+    key: `gsw:locks:${id}`,
+    execution: async () => {
+      const tx = redis.multi();
+      tx.del(`gsw:statuses:${id}:${job.status}`);
+      tx.del(`gsw:messages:${id}`);
+
+      const result = await tx.exec();
+      if (!result || result.some(([err]) => err)) {
+        throw new Error("error during transaction execution");
+      }
+    },
+  });
+}

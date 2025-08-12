@@ -27,6 +27,7 @@ import {
 } from "~/components/ui/select";
 import { Job } from "~/models/job";
 import { getSelectableJobStatuses, JobStatus } from "~/models/job-status";
+import DeleteJobDialog from "~/routes/jobs.$job_id/components/delete-job-dialog";
 import RetryJobDialog from "~/routes/jobs.$job_id/components/retry-job-dialog";
 
 interface Props {
@@ -46,8 +47,10 @@ export default function JobCard({ job }: Props) {
     });
   }, [job]);
 
-  const [isPayloadOpen, setIsPayloadOpen] = useState(false);
-  const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [payloadOpen, setPayloadOpen] = useState(false);
+  const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+  const [retryDialogOpen, setRetryDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState<JobStatus | null>(null);
 
   const handleStatusChange = (status: JobStatus) => {
@@ -68,16 +71,13 @@ export default function JobCard({ job }: Props) {
   const handleStatusSubmit = useCallback(() => {
     if (newStatus) {
       onStatusChange({ id: job.id, oldStatus: job.status, newStatus });
-      setIsStatusDialogOpen(false);
+      setStatusDialogOpen(false);
       setNewStatus(null);
     }
   }, [onStatusChange, job, newStatus]);
 
   const selectableJobStatus = getSelectableJobStatuses(job.status);
-  console.log(selectableJobStatus, job.status);
   const isStatusChangeable = selectableJobStatus.length > 0;
-
-  const [retryDialogOpen, setRetryDialogOpen] = useState(false);
 
   return (
     <Card className="w-full max-w-3xl mx-auto min-w-[400px] relative">
@@ -126,7 +126,7 @@ export default function JobCard({ job }: Props) {
           <div className="col-span-3">
             <dt className="text-base text-gray-500">Payload</dt>
             <dd className="mt-2">
-              <Dialog open={isPayloadOpen} onOpenChange={setIsPayloadOpen}>
+              <Dialog open={payloadOpen} onOpenChange={setPayloadOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm">
                     View Payload
@@ -167,17 +167,25 @@ export default function JobCard({ job }: Props) {
       </CardContent>
       <CardFooter className="flex justify-end">
         {isStatusChangeable && (
-          <Button variant="default" onClick={() => setIsStatusDialogOpen(true)}>
+          <Button variant="default" onClick={() => setStatusDialogOpen(true)}>
             Change Job Status
           </Button>
         )}
         {job.status === "failed" && (
-          <Button variant="default" onClick={() => setRetryDialogOpen(true)}>
-            Retry Job
-          </Button>
+          <div className="flex space-x-3">
+            <Button variant="default" onClick={() => setRetryDialogOpen(true)}>
+              Retry Job
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => setDeleteDialogOpen(true)}
+            >
+              Delete Job
+            </Button>
+          </div>
         )}
       </CardFooter>
-      <Dialog open={isStatusDialogOpen} onOpenChange={setIsStatusDialogOpen}>
+      <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Change Job Status</DialogTitle>
@@ -206,6 +214,11 @@ export default function JobCard({ job }: Props) {
         job={job}
         open={retryDialogOpen}
         setOpen={setRetryDialogOpen}
+      />
+      <DeleteJobDialog
+        job={job}
+        open={deleteDialogOpen}
+        setOpen={setDeleteDialogOpen}
       />
     </Card>
   );
