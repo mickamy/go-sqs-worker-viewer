@@ -24,10 +24,6 @@ import { JobRate } from "~/models/job-rate";
 const defaultInterval = 5000;
 
 const chartConfig = {
-  success: {
-    label: "Success",
-    color: colors.green[500],
-  },
   failure: {
     label: "Failure",
     color: colors.red[500],
@@ -51,9 +47,9 @@ export default function RateChart({ rates, poll, className, ...props }: Props) {
     <Card className={cn("w-full min-w-[400px]", className)} {...props}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <div className="flex-1">
-          <CardTitle className="text-2xl font-bold">Job Success Rate</CardTitle>
+          <CardTitle className="text-2xl font-bold">Job Failure Rate</CardTitle>
           <CardDescription>
-            Overview of job success and failure rates over time
+            Overview of job failure rates over time
           </CardDescription>
         </div>
         <div className="flex flex-col items-center space-y-2">
@@ -83,18 +79,6 @@ export default function RateChart({ rates, poll, className, ...props }: Props) {
             margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           >
             <defs>
-              <linearGradient id="fillSuccess" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor={chartConfig.success.color}
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor={chartConfig.success.color}
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
               <linearGradient id="fillFailure" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
@@ -142,13 +126,6 @@ export default function RateChart({ rates, poll, className, ...props }: Props) {
                   }}
                 />
               }
-            />
-            <Area
-              dataKey="success"
-              type="monotone"
-              fill="url(#fillSuccess)"
-              stroke={chartConfig.success.color}
-              strokeWidth={2}
             />
             <Area
               dataKey="failure"
