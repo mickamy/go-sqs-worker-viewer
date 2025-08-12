@@ -17,7 +17,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { ScrollArea } from "~/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "~/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
@@ -132,12 +132,18 @@ export default function JobCard({ job }: Props) {
                     View Payload
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="max-w-[90vw] sm:max-w-[900px]">
                   <DialogHeader>
                     <DialogTitle>Payload</DialogTitle>
                   </DialogHeader>
-                  <ScrollArea className="h-[200px] w-full rounded-md border p-4">
-                    <pre className="text-sm">{job.payload}</pre>
+
+                  <ScrollArea className="max-h-[65vh] w-full rounded-md border">
+                    <div className="p-4">
+                      <pre className="text-sm whitespace-pre inline-block">
+                        {JSON.stringify(JSON.parse(job.payload), null, 2)}
+                      </pre>
+                    </div>
+                    <ScrollBar orientation="horizontal" />
                   </ScrollArea>
                 </DialogContent>
               </Dialog>
